@@ -6,6 +6,8 @@
 package messageapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -14,21 +16,29 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author medit
  */
-public class Screen extends javax.swing.JFrame {
 
+public class Screen extends javax.swing.JFrame {
+        
     /**
      * Creates new form Screen
      */
-     static DefaultTableModel user_table_model = new DefaultTableModel();
-     static DefaultTableModel room_table_model = new DefaultTableModel();
-    
-     static ArrayList<DefaultListModel> dlms = new ArrayList();
-    
+     public static DefaultTableModel client_table_model = new DefaultTableModel();
+     public static DefaultTableModel room_table_model = new DefaultTableModel();
+     public static int chat_box_id=0;
+     public static Map<Object, Chatbox> objToChatMap = new HashMap<Object, Chatbox>();
+     public static ArrayList<Chatbox> chatboxes = new ArrayList();
+     
+     /** deprecated 
+     public static ArrayList<DefaultListModel> dlms = new ArrayList();
+     public static Map<Integer, DefaultListModel> intToRoomDlmMap = new HashMap<Integer, DefaultListModel>();
+     public static Map<Integer, DefaultListModel> intToClientDlmMap = new HashMap<Integer, DefaultListModel>();
+     */
+      
     public Screen() {
         initComponents();
         
-        user_table_model.setColumnIdentifiers(new Object[]{"User Name"});
-        user_table.setModel(user_table_model);
+        client_table_model.setColumnIdentifiers(new Object[]{"User Name"});
+        user_table.setModel(client_table_model);
         
         room_table_model.setColumnIdentifiers(new Object[]{"Room Name"});
         room_table.setModel(room_table_model);

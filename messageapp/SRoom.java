@@ -6,6 +6,7 @@
 package messageapp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,6 +15,8 @@ import java.io.Serializable;
 public class SRoom implements Serializable{
     public int room_id;
     public String room_name;
+    public Client room_creater;
+    public ArrayList <SClient> clients = new ArrayList();
     
     @Override
     public String toString(){

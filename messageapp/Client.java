@@ -9,11 +9,10 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 
 
 class Listen extends Thread {
-
-    
     public void run() {
         while (Client.socket.isConnected()) {
             try {
@@ -37,15 +36,31 @@ class Listen extends Thread {
 
     }
     
-    void addListToTable(Message message){
+     void addListToTable(Message message){
         
-        if (message.cast_type==Message.Cast_Type.ROOM_LIST) {
+        if (message.chat_type==Message.Chat_Type.ROOM_MESSAGE) {
             ArrayList <SRoom> rooms = (ArrayList <SRoom>)message.content;
             for (SRoom room : rooms) {
                 Client.screen.room_table_model.addRow(new Object[]{room});
+                setChatBox(room);
+            }
+        }
+        else{
+            ArrayList <CClient> cclients = (ArrayList <CClient>)message.content;
+            for (CClient cClient : cclients) {
+                Client.screen.client_table_model.addRow(new Object[]{cClient});
+                setChatBox(cClient);
             }
         }
     }
+        
+     void setChatBox(SRoom sRoom){
+        Chatbox chatbox = new Chatbox(sRoom);
+     }
+     void setChatBox(CClient cClient){
+        Chatbox chatbox = new Chatbox(cClient);
+     }
+
 }
 
 public class Client {
@@ -58,6 +73,7 @@ public class Client {
     
     public static void Start(String ip, int port) {
         try {
+            Client s= new Client();
             screen = new Screen();
             screen.setVisible(true);
             Client.socket = new Socket(ip, port);

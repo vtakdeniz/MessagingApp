@@ -15,9 +15,6 @@ public class SClient {
     ObjectOutputStream socketOutput;
     ObjectInputStream socketInput;
     Listen listenThread;
-    SClient adversary;
-    public boolean paired = false;
-
     public SClient(Socket incoming_socket, int id) {
         this.socket = incoming_socket;
         this.id = id;
@@ -45,7 +42,8 @@ public class SClient {
             while (currentClient.socket.isConnected()) {
 
                 try {
-                    Object received = currentClient.socketInput.readObject();
+                    
+                 Object received = currentClient.socketInput.readObject();
                     //Server.Send(currentClient.adversary,received);
 
                 } catch (IOException e) {

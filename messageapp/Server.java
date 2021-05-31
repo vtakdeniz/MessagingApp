@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,22 +41,25 @@ public class Server {
 
     public static ServerSocket serverSocket;
     public static int client_id = 0;
-
+    public static int room_id = 0;
+    
     public static int port = 0;
-
+    public static Map<Integer, SRoom> intToRoomMap = new HashMap<Integer, SRoom>();
+    public static Map<Integer, SClient> intToClientMap = new HashMap<Integer, SClient>();
     public static ServerThread main_thread;
-
     public static ArrayList<SClient> Clients = new ArrayList<>();
     public static ArrayList<SRoom> Rooms = new ArrayList<>();
     
     public static void Start(int openport) {
         try {
                 SRoom s1 = new SRoom();
-                s1.room_id=1;
+                s1.room_id=room_id;
                 s1.room_name="test";
                 SRoom s2 = new SRoom();
-                s2.room_id=1;
+                s2.room_id=room_id;
                 s2.room_name="test";
+                mapRoom(s1);
+                mapRoom(s2);
                 Server.Rooms.add(s1);
                 Server.Rooms.add(s2);
             Server.port = openport;
@@ -67,6 +72,15 @@ public class Server {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public static void broadcastToRoom(SRoom sRoom,SClient sClient,Message message){
+         ArrayList<SClient> room_clients = sRoom.clients;
+         for (SClient room_client : room_clients) {
+             if(sClient==room_client) continue;
+             Send(sClient, message);
+        }
+    }
+    
     public static void Send(SClient cl, Object msg) {
 
         try {
@@ -77,6 +91,15 @@ public class Server {
 
     }
     
+    private static void mapRoom(SRoom sRoom){
+    int room_id=sRoom.room_id;
+    Server.intToRoomMap.put(room_id, sRoom);
+    }
+    
+    private static void mapClient(SClient sClient){
+    int client_id=sClient.id;
+    Server.intToClientMap.put(client_id, sClient);
+    }
     
     public static void BroadCast(SClient cl, Object msg) {
 
