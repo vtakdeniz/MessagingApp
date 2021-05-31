@@ -18,14 +18,7 @@ class ServerThread extends Thread {
                 Server.print("One client accepted");
                 SClient Sclient = new SClient(clientSocket, Server.client_id);
                 
-                SRoom s1 = new SRoom();
-                s1.room_id=1;
-                s1.room_name="test";
-                SRoom s2 = new SRoom();
-                s2.room_id=1;
-                s2.room_name="test";
-                Server.Rooms.add(s1);
-                Server.Rooms.add(s2);
+                
                 Message rooms_message = new Message(Message.Type.LIST);
                 rooms_message.cast_type = Message.Cast_Type.ROOM_LIST;
                 rooms_message.content=Server.Rooms;
@@ -56,6 +49,14 @@ public class Server {
     
     public static void Start(int openport) {
         try {
+                SRoom s1 = new SRoom();
+                s1.room_id=1;
+                s1.room_name="test";
+                SRoom s2 = new SRoom();
+                s2.room_id=1;
+                s2.room_name="test";
+                Server.Rooms.add(s1);
+                Server.Rooms.add(s2);
             Server.port = openport;
             Server.serverSocket = new ServerSocket(Server.port);
 

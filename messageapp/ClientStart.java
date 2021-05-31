@@ -11,9 +11,8 @@ package messageapp;
  */
 public class ClientStart {
     public static void main(String[] args) {
-        Client c = new Client();
-        
-        c.Start("127.0.0.1", 2005);
+      
+        Client.Start("127.0.0.1", 2005);
         
     }
 }

@@ -19,10 +19,10 @@ public class Screen extends javax.swing.JFrame {
     /**
      * Creates new form Screen
      */
-     DefaultTableModel user_table_model = new DefaultTableModel();
-     DefaultTableModel room_table_model = new DefaultTableModel();
+     static DefaultTableModel user_table_model = new DefaultTableModel();
+     static DefaultTableModel room_table_model = new DefaultTableModel();
     
-     ArrayList<DefaultListModel> dlms = new ArrayList();
+     static ArrayList<DefaultListModel> dlms = new ArrayList();
     
     public Screen() {
         initComponents();

@@ -13,10 +13,6 @@ import java.util.logging.Logger;
 
 class Listen extends Thread {
 
-    Screen local_screen;
-    public Listen(Screen localscreen){
-        this.local_screen=localscreen;
-    }
     
     public void run() {
         while (Client.socket.isConnected()) {
@@ -46,7 +42,7 @@ class Listen extends Thread {
         if (message.cast_type==Message.Cast_Type.ROOM_LIST) {
             ArrayList <SRoom> rooms = (ArrayList <SRoom>)message.content;
             for (SRoom room : rooms) {
-                local_screen.room_table_model.addRow(new Object[]{room});
+                Client.screen.room_table_model.addRow(new Object[]{room});
             }
         }
     }
@@ -58,9 +54,9 @@ public class Client {
     public static ObjectOutputStream socketOutput;
     public static Socket socket;
     public static Listen listenMe;
-    public Screen screen;
+    public static Screen screen;
     
-    public void Start(String ip, int port) {
+    public static void Start(String ip, int port) {
         try {
             screen = new Screen();
             screen.setVisible(true);
@@ -68,7 +64,7 @@ public class Client {
             Client.print("Connected");
             Client.socketInput = new ObjectInputStream(Client.socket.getInputStream());
             Client.socketOutput = new ObjectOutputStream(Client.socket.getOutputStream());
-            Client.listenMe = new Listen(screen);
+            Client.listenMe = new Listen();
             Client.listenMe.start();
 
         } catch (IOException ex) {
