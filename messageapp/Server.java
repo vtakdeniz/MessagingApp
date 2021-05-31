@@ -23,8 +23,13 @@ class ServerThread extends Thread {
                 
                 Message rooms_message = new Message(Message.Type.LIST);
                 rooms_message.cast_type = Message.Cast_Type.ROOM_LIST;
-                rooms_message.content=Server.Rooms;
+                rooms_message.content=Server.castRooms(Server.Rooms);
+                
                 Server.Send(Sclient, rooms_message);
+                
+                for (SRoom rooms : Server.Rooms) {
+                rooms.clients.add(Sclient);
+                }
                 
                 Server.client_id++;
                 Server.Clients.add(Sclient);
@@ -49,15 +54,16 @@ public class Server {
     public static ServerThread main_thread;
     public static ArrayList<SClient> Clients = new ArrayList<>();
     public static ArrayList<SRoom> Rooms = new ArrayList<>();
-    
     public static void Start(int openport) {
         try {
                 SRoom s1 = new SRoom();
                 s1.room_id=room_id;
-                s1.room_name="test";
+                s1.room_name="test1";
+                room_id++;
                 SRoom s2 = new SRoom();
                 s2.room_id=room_id;
-                s2.room_name="test";
+                s2.room_name="test2";
+                room_id++;
                 mapRoom(s1);
                 mapRoom(s2);
                 Server.Rooms.add(s1);
@@ -73,12 +79,16 @@ public class Server {
         }
     }
     
-    public static void broadcastToRoom(SRoom sRoom,SClient sClient,Message message){
+    public static void broadcastToRoom(CRoom cRoom,SClient sClient,Message message){
+         SRoom sRoom = intToRoomMap.get(cRoom.room_id);
          ArrayList<SClient> room_clients = sRoom.clients;
+         if (!room_clients.contains(sClient)) {
+            return;
+         }
          for (SClient room_client : room_clients) {
              if(sClient==room_client) continue;
              Send(sClient, message);
-        }
+         }
     }
     
     public static void Send(SClient cl, Object msg) {
@@ -89,6 +99,23 @@ public class Server {
             Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+    
+    static ArrayList<CRoom> castRooms (ArrayList<SRoom> sRooms) {
+        ArrayList<CRoom> cRooms = new ArrayList<>();
+        
+        for (SRoom sroom : sRooms) {
+            cRooms.add(castRoom(sroom));
+        }
+        return cRooms;
+    }
+    
+    static CRoom castRoom(SRoom sRoom){
+        CRoom cRoom = new CRoom();
+        //cRoom.room_creater=sRoom.room_creater;
+        cRoom.room_id=sRoom.room_id;
+        cRoom.room_name=sRoom.room_name;
+        return cRoom;
     }
     
     private static void mapRoom(SRoom sRoom){

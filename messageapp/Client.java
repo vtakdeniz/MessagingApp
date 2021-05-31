@@ -20,6 +20,12 @@ class Listen extends Thread {
                 switch (received.type) {
                     case LIST:
                         addListToTable(received);
+                        break;
+                    case TEXT:
+                        String text = received.nickname+" : "+(String)received.content;
+                        Chatbox chatbox = Screen.objToChatMap.get(received.receiver);
+                        chatbox.list_model.addElement(text);
+                        break;
                 }
 
             } catch (IOException ex) {
@@ -38,27 +44,29 @@ class Listen extends Thread {
     
      void addListToTable(Message message){
         
-        if (message.chat_type==Message.Chat_Type.ROOM_MESSAGE) {
-            ArrayList <SRoom> rooms = (ArrayList <SRoom>)message.content;
-            for (SRoom room : rooms) {
-                Client.screen.room_table_model.addRow(new Object[]{room});
+        if (message.cast_type==Message.Cast_Type.ROOM_LIST) {
+            ArrayList <CRoom> rooms = (ArrayList <CRoom>)message.content;
+            for (CRoom room : rooms) {
+              //  Client.screen.room_table_model.addRow(new Object[]{room});
                 setChatBox(room);
             }
         }
         else{
             ArrayList <CClient> cclients = (ArrayList <CClient>)message.content;
             for (CClient cClient : cclients) {
-                Client.screen.client_table_model.addRow(new Object[]{cClient});
+               // Client.screen.client_table_model.addRow(new Object[]{cClient});
                 setChatBox(cClient);
             }
         }
     }
         
-     void setChatBox(SRoom sRoom){
-        Chatbox chatbox = new Chatbox(sRoom);
+     void setChatBox(CRoom cRoom){
+        Chatbox chatbox = new Chatbox(cRoom);
+        Client.screen.room_table_model.addRow(new Object[]{chatbox});
      }
      void setChatBox(CClient cClient){
         Chatbox chatbox = new Chatbox(cClient);
+        Client.screen.client_table_model.addRow(new Object[]{chatbox});
      }
 
 }
@@ -70,10 +78,12 @@ public class Client {
     public static Socket socket;
     public static Listen listenMe;
     public static Screen screen;
+    public static String nick_name  ;
+    public static CClient cclient;
     
-    public static void Start(String ip, int port) {
+    public static void Start(String ip, int port,String username) {
         try {
-            Client s= new Client();
+            Client.nick_name = username;
             screen = new Screen();
             screen.setVisible(true);
             Client.socket = new Socket(ip, port);
@@ -82,7 +92,10 @@ public class Client {
             Client.socketOutput = new ObjectOutputStream(Client.socket.getOutputStream());
             Client.listenMe = new Listen();
             Client.listenMe.start();
-
+            Client.cclient= new CClient();
+            cclient.client_id=-1;
+            cclient.client_nickname=username;
+            
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -11,8 +11,11 @@ public class Message implements java.io.Serializable {
     public Cast_Type cast_type;
     public Chat_Type chat_type;
     public Object content;
-    public int receiver;
-
+    public Object receiver;
+        
+    
+    public String nickname;
+    
     public Message(Type t) {
         this.type = t;
     }

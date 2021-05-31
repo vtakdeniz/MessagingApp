@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class SRoom implements Serializable{
     public int room_id;
     public String room_name;
-    public Client room_creater;
+    public SClient room_creater;
     public ArrayList <SClient> clients = new ArrayList();
     
     @Override

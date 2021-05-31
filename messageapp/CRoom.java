@@ -6,16 +6,19 @@
 package messageapp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  *
  * @author medit
  */
-public class CClient implements Serializable{
-    public int client_id;
-    public String client_nickname;
-     @Override
+public class CRoom implements Serializable{
+    public int room_id;
+    public String room_name;
+    public CClient room_creater;
+
+    @Override
     public String toString(){
-        return this.client_nickname;
+        return this.room_name;
     }
 }

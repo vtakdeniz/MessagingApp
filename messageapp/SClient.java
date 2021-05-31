@@ -44,6 +44,12 @@ public class SClient {
                 try {
                     
                  Object received = currentClient.socketInput.readObject();
+                 Message message = (Message)received;
+                 switch (message.chat_type){
+                     case ROOM_MESSAGE:
+                         Server.broadcastToRoom((CRoom)message.receiver, currentClient, message);
+                         
+                 }
                     //Server.Send(currentClient.adversary,received);
 
                 } catch (IOException e) {
