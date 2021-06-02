@@ -31,7 +31,7 @@ public class Chatbox {
         DefaultListModel dlm = new DefaultListModel();
         this.list_model = dlm;
         this.chatbox_name = cClient.client_nickname;
-        Screen.objToChatMap.put(cClient, this);
+        
     }
 
     public Chatbox(CRoom cRoom) {
@@ -43,7 +43,7 @@ public class Chatbox {
         DefaultListModel dlm = new DefaultListModel();
         this.list_model = dlm;
         this.chatbox_name = cRoom.room_name;
-        Screen.objToChatMap.put(cRoom, this);
+        
     }
     
     public Chatbox(SRoom sRoom) {
@@ -55,8 +55,7 @@ public class Chatbox {
         this.croom = cRoom;
         DefaultListModel dlm = new DefaultListModel();
         this.list_model = dlm;
-        this.chatbox_name = cRoom.room_name;
-        Screen.objToChatMap.put(cRoom, this);
+        this.chatbox_name = cRoom.room_name; 
     }
 
     CRoom castRoom(SRoom sRoom){

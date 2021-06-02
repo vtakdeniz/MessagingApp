@@ -23,13 +23,12 @@ class Listen extends Thread {
                         break;
                     case TEXT:
                         String text = received.nickname+" : "+(String)received.content;
-                        Chatbox chatbox = Screen.objToChatMap.get(received.receiver);
+                        Chatbox chatbox = Screen.getChatbox(received);
                         chatbox.list_model.addElement(text);
                         break;
                 }
 
             } catch (IOException ex) {
-
                 Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 Client.terminate();
                 break;
@@ -62,10 +61,13 @@ class Listen extends Thread {
         
      void setChatBox(CRoom cRoom){
         Chatbox chatbox = new Chatbox(cRoom);
+        chatbox.chat_box_nickname="DEBUG";
+        Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
         Client.screen.room_table_model.addRow(new Object[]{chatbox});
      }
      void setChatBox(CClient cClient){
         Chatbox chatbox = new Chatbox(cClient);
+        Screen.IntToClientChatMap.put(cClient.client_id, chatbox);
         Client.screen.client_table_model.addRow(new Object[]{chatbox});
      }
 

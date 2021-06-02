@@ -25,7 +25,8 @@ public class Screen extends javax.swing.JFrame {
     public static DefaultTableModel client_table_model = new DefaultTableModel();
     public static DefaultTableModel room_table_model = new DefaultTableModel();
     public static int chat_box_id = 0;
-    public static Map<Object, Chatbox> objToChatMap = new HashMap<Object, Chatbox>();
+    public static Map<Integer, Chatbox> IntToRoomChatMap = new HashMap<Integer, Chatbox>();
+    public static Map<Integer, Chatbox> IntToClientChatMap = new HashMap<Integer, Chatbox>();
     public static ArrayList<Chatbox> chatboxes = new ArrayList();
     public static Chatbox chosen_chatbox;
 
@@ -347,6 +348,14 @@ public class Screen extends javax.swing.JFrame {
         });
     }
 
+    public static Chatbox getChatbox(Message message){
+        if (message.chat_type==Message.Chat_Type.ROOM_MESSAGE) {
+            System.out.println("chatbox screen method");
+            return IntToRoomChatMap.get(((CRoom)message.receiver).room_id);
+        }
+        return IntToClientChatMap.get(((CClient)message.receiver).client_id);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_button;
     private javax.swing.JButton choose_button;

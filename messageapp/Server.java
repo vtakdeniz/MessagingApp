@@ -54,7 +54,7 @@ public class Server {
     public static ServerThread main_thread;
     public static ArrayList<SClient> Clients = new ArrayList<>();
     public static ArrayList<SRoom> Rooms = new ArrayList<>();
-    public static void Start(int openport) {
+    public static void Start(int openingport) {
         try {
                 SRoom s1 = new SRoom();
                 s1.room_id=room_id;
@@ -68,7 +68,7 @@ public class Server {
                 mapRoom(s2);
                 Server.Rooms.add(s1);
                 Server.Rooms.add(s2);
-            Server.port = openport;
+            Server.port = openingport;
             Server.serverSocket = new ServerSocket(Server.port);
 
             Server.main_thread = new ServerThread();
@@ -79,15 +79,16 @@ public class Server {
         }
     }
     
-    public static void broadcastToRoom(CRoom cRoom,SClient sClient,Message message){
+    public static void broadcastToRoom(CRoom cRoom,SClient sClient,Object message){
          SRoom sRoom = intToRoomMap.get(cRoom.room_id);
          ArrayList<SClient> room_clients = sRoom.clients;
          if (!room_clients.contains(sClient)) {
             return;
          }
+         
          for (SClient room_client : room_clients) {
              if(sClient==room_client) continue;
-             Send(sClient, message);
+             Send(room_client, message);
          }
     }
     
