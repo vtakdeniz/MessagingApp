@@ -339,6 +339,7 @@ public class Screen extends javax.swing.JFrame {
             m.chat_type = Message.Chat_Type.ROOM_MESSAGE;
             m.content = chosen_chatbox.croom;
             Client.Send(m);
+            text_field.setText("");
         }
     }//GEN-LAST:event_send_buttonActionPerformed
 
@@ -385,10 +386,12 @@ public class Screen extends javax.swing.JFrame {
 
     public static Chatbox getChatbox(Message message) {
         if (message.chat_type == Message.Chat_Type.ROOM_MESSAGE) {
-            System.out.println("chatbox getchatbx screen method");
             return IntToRoomChatMap.get(((CRoom) message.receiver).room_id);
         }
-        return IntToClientChatMap.get(((CClient) message.receiver).client_id);
+        else if(message.chat_type==Message.Chat_Type.PVP_MESSAGE){
+            return IntToClientChatMap.get(((CClient) message.receiver).client_id);
+        }
+        return null;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

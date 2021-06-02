@@ -83,13 +83,21 @@ public class Server {
          SRoom sRoom = intToRoomMap.get(cRoom.room_id);
          ArrayList<SClient> room_clients = sRoom.clients;
          if (!room_clients.contains(sClient)) {
-             Message m= new Message(Message.Type.CONN_REQ);
-             
+             //Message m= new Message(Message.Type.CONN_REQ);
              return;
          }
          
          for (SClient room_client : room_clients) {
              if(sClient==room_client) continue;
+             Send(room_client, message);
+         }
+    }
+    
+     public static void broadcastToNotfRoom(SRoom sRoom,SClient sClient,Object message){
+        
+         ArrayList<SClient> room_clients = sRoom.clients;
+         
+         for (SClient room_client : room_clients) {
              Send(room_client, message);
          }
     }
@@ -102,6 +110,12 @@ public class Server {
         m.nickname=message.nickname;
         m.content=message.content;
         Send(sClient, m);
+        Message join_message = new Message(Message.Type.TEXT);
+        join_message.nickname="Server";
+        join_message.chat_type=Message.Chat_Type.ROOM_MESSAGE;
+        join_message.content=m.nickname+" has joined the room";
+        join_message.receiver=castRoom(sRoom);
+        broadcastToNotfRoom(sRoom, sClient, join_message);
     }
     
     
