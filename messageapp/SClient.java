@@ -54,6 +54,9 @@ public class SClient {
                      case CONN_REQ:
                          Server.handleRequest(currentClient, message);
                          break;
+                     case CREATE:
+                         Server.CreateRoom(currentClient,message);
+                         break;
                  }
                     //Server.Send(currentClient.adversary,received);
 

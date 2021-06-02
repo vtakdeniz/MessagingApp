@@ -60,7 +60,7 @@ public class Chatbox {
 
     CRoom castRoom(SRoom sRoom){
         CRoom cRoom = new CRoom();
-        //cRoom.room_creater=sRoom.room_creater;
+        //cRoom.room_creator=sRoom.room_creator;
         cRoom.room_id=sRoom.room_id;
         cRoom.room_name=sRoom.room_name;
         return cRoom;

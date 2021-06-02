@@ -3,8 +3,8 @@ package messageapp;
 
 public class Message implements java.io.Serializable {
 
-    public static enum Type {TEXT, CONN_REQ, FILE, DISCONNECT,LIST_REQUEST,LIST,INJECTION,DELETION,NOTIFICATION}
-    public static enum Notf_Type {SUCCES,FAIL}
+    public static enum Type {TEXT, CONN_REQ, FILE,LIST_REQUEST,LIST,INJECTION,DELETION,NOTIFICATION,CREATE,ROOM_CREATE_NOTF}
+    public static enum Notf_Type {SUCCES,FAIL,DISCONNECT}
     public static enum Cast_Type {ROOM_LIST,USER_LIST,ROOM,CLIENT}
     public static enum Chat_Type {ROOM_MESSAGE,PVP_MESSAGE}           
     

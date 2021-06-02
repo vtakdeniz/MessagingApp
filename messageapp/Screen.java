@@ -5,6 +5,7 @@
  */
 package messageapp;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +48,7 @@ public class Screen extends javax.swing.JFrame {
         room_table.setModel(room_table_model);
 
         message_screen_panel.setVisible(false);
+        create_screen_panel.setVisible(false);
         message_list.setModel(new DefaultListModel());
     }
 
@@ -59,6 +61,7 @@ public class Screen extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSeparator4 = new javax.swing.JSeparator();
         message_screen_panel = new javax.swing.JPanel();
         back_button = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -77,6 +80,15 @@ public class Screen extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         room_table = new javax.swing.JTable();
         create_button = new javax.swing.JButton();
+        create_screen_panel = new javax.swing.JPanel();
+        room_create_text = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        create_screen_button = new javax.swing.JButton();
+        cancel_button = new javax.swing.JToggleButton();
+        jSeparator3 = new javax.swing.JSeparator();
+        jLabel2 = new javax.swing.JLabel();
+        nickname_field = new javax.swing.JTextField();
+        jSeparator5 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -201,6 +213,73 @@ public class Screen extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel1.setText("Room Name : ");
+
+        create_screen_button.setText("Create");
+        create_screen_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                create_screen_buttonActionPerformed(evt);
+            }
+        });
+
+        cancel_button.setText("Cancel");
+        cancel_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancel_buttonActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        jLabel2.setText("Nickname For Room :");
+
+        javax.swing.GroupLayout create_screen_panelLayout = new javax.swing.GroupLayout(create_screen_panel);
+        create_screen_panel.setLayout(create_screen_panelLayout);
+        create_screen_panelLayout.setHorizontalGroup(
+            create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(create_screen_panelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(cancel_button, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(create_screen_button, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
+            .addComponent(jSeparator3, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(create_screen_panelLayout.createSequentialGroup()
+                .addGap(80, 80, 80)
+                .addGroup(create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(create_screen_panelLayout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(create_screen_panelLayout.createSequentialGroup()
+                        .addGroup(create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nickname_field, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)
+                            .addComponent(room_create_text, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 74, Short.MAX_VALUE))))
+            .addGroup(create_screen_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jSeparator5))
+        );
+        create_screen_panelLayout.setVerticalGroup(
+            create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(create_screen_panelLayout.createSequentialGroup()
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(room_create_text, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(nickname_field, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cancel_button)
+                    .addComponent(create_screen_button))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         javax.swing.GroupLayout start_panelLayout = new javax.swing.GroupLayout(start_panel);
         start_panel.setLayout(start_panelLayout);
         start_panelLayout.setHorizontalGroup(
@@ -209,29 +288,35 @@ public class Screen extends javax.swing.JFrame {
                 .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(create_button, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 453, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(choose_button, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
+            .addGroup(start_panelLayout.createSequentialGroup()
+                .addGap(183, 183, 183)
+                .addComponent(create_screen_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(244, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(start_panelLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(670, Short.MAX_VALUE)))
+                    .addContainerGap(699, Short.MAX_VALUE)))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(start_panelLayout.createSequentialGroup()
                     .addGap(6, 6, 6)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 829, Short.MAX_VALUE)
                     .addGap(6, 6, 6)))
         );
         start_panelLayout.setVerticalGroup(
             start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, start_panelLayout.createSequentialGroup()
                 .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 533, Short.MAX_VALUE)
+                .addGap(66, 66, 66)
+                .addComponent(create_screen_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
                 .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(choose_button)
                     .addComponent(create_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -240,22 +325,22 @@ public class Screen extends javax.swing.JFrame {
                 .addGroup(start_panelLayout.createSequentialGroup()
                     .addGap(330, 330, 330)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(55, Short.MAX_VALUE)))
+                    .addContainerGap(56, Short.MAX_VALUE)))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(start_panelLayout.createSequentialGroup()
                     .addGap(59, 59, 59)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(316, Short.MAX_VALUE)))
+                    .addContainerGap(317, Short.MAX_VALUE)))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(start_panelLayout.createSequentialGroup()
                     .addGap(277, 277, 277)
                     .addComponent(room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(260, Short.MAX_VALUE)))
+                    .addContainerGap(261, Short.MAX_VALUE)))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(start_panelLayout.createSequentialGroup()
                     .addGap(278, 278, 278)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(299, Short.MAX_VALUE)))
+                    .addContainerGap(300, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -295,15 +380,14 @@ public class Screen extends javax.swing.JFrame {
                 text_field.setText("It looks like you are not a member of this group. Please enter a username here to continue :");
                 ArrayList<Integer> roo = Client.joined_rooms;
                 for (Integer cRoom : roo) {
-                    System.out.println("joined rooms "+cRoom+" name "+cRoom);
+                    System.out.println("joined rooms " + cRoom + " name " + cRoom);
                 }
-                System.out.println("chosen box room " + chosen_chatbox.croom.room_id+"  name  "+chosen_chatbox.croom.room_name);
-            }
-            else{
+                System.out.println("chosen box room " + chosen_chatbox.croom.room_id + "  name  " + chosen_chatbox.croom.room_name);
+            } else {
                 text_field.setText("");
                 System.out.println("in the room");
             }
-                
+
             message_screen_panel.setVisible(true);
             start_panel.setVisible(false);
         } else if (row_user != -1) {
@@ -323,7 +407,6 @@ public class Screen extends javax.swing.JFrame {
 
     private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_buttonActionPerformed
         if (Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
-            System.out.println("in the room");
             Message message = new Message(Message.Type.TEXT);
             message.chat_type = Screen.chosen_chatbox.chat_type;
             message.content = text_field.getText();
@@ -333,7 +416,6 @@ public class Screen extends javax.swing.JFrame {
             Screen.chosen_chatbox.list_model.addElement("You : " + text_field.getText());
             text_field.setText("");
         } else {
-            System.out.println("not in the room");
             Message m = new Message(Message.Type.CONN_REQ);
             m.nickname = text_field.getText();
             m.chat_type = Message.Chat_Type.ROOM_MESSAGE;
@@ -341,11 +423,31 @@ public class Screen extends javax.swing.JFrame {
             Client.Send(m);
             text_field.setText("");
         }
+
     }//GEN-LAST:event_send_buttonActionPerformed
 
+
     private void create_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_buttonActionPerformed
+        create_screen_panel.setVisible(true);
+        start_panel.setEnabled(false);
 
     }//GEN-LAST:event_create_buttonActionPerformed
+
+    private void create_screen_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_screen_buttonActionPerformed
+        Message m = new Message(Message.Type.CREATE);
+        m.content = room_create_text.getText();
+        room_create_text.setText("");
+        m.nickname = nickname_field.getText();
+        nickname_field.setText("");
+        Client.Send(m);
+        create_screen_panel.setVisible(false);
+        start_panel.setEnabled(true);
+    }//GEN-LAST:event_create_screen_buttonActionPerformed
+
+    private void cancel_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancel_buttonActionPerformed
+        create_screen_panel.setVisible(false);
+        start_panel.setEnabled(true);
+    }//GEN-LAST:event_cancel_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -387,8 +489,7 @@ public class Screen extends javax.swing.JFrame {
     public static Chatbox getChatbox(Message message) {
         if (message.chat_type == Message.Chat_Type.ROOM_MESSAGE) {
             return IntToRoomChatMap.get(((CRoom) message.receiver).room_id);
-        }
-        else if(message.chat_type==Message.Chat_Type.PVP_MESSAGE){
+        } else if (message.chat_type == Message.Chat_Type.PVP_MESSAGE) {
             return IntToClientChatMap.get(((CClient) message.receiver).client_id);
         }
         return null;
@@ -396,15 +497,25 @@ public class Screen extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_button;
+    private javax.swing.JToggleButton cancel_button;
     private javax.swing.JButton choose_button;
     private javax.swing.JButton create_button;
+    private javax.swing.JButton create_screen_button;
+    private javax.swing.JPanel create_screen_panel;
     private javax.swing.JLabel current_room_label;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JSeparator jSeparator4;
+    private javax.swing.JSeparator jSeparator5;
     private javax.swing.JList<String> message_list;
     private javax.swing.JPanel message_screen_panel;
+    private javax.swing.JTextField nickname_field;
+    private javax.swing.JTextField room_create_text;
     private javax.swing.JLabel room_label;
     private javax.swing.JTable room_table;
     private javax.swing.JButton send_button;

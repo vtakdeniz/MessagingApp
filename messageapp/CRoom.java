@@ -15,8 +15,7 @@ import java.util.ArrayList;
 public class CRoom implements Serializable{
     public int room_id;
     public String room_name;
-    public CClient room_creater;
-
+    public String room_creator;
     @Override
     public String toString(){
         return this.room_name;

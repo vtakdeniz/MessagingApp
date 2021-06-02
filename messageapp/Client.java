@@ -32,6 +32,14 @@ class Listen extends Thread {
                         Screen.IntToRoomChatMap.get(((CRoom)received.content).room_id).chat_box_nickname=received.nickname;
                         }
                         break;
+                    case INJECTION:
+                        if (received.cast_type==Message.Cast_Type.ROOM) {
+                            addRoomToTable((CRoom)received.content);
+                        }
+                    case ROOM_CREATE_NOTF:
+                        if (received.notf_type==Message.Notf_Type.SUCCES) {
+                            Client.joined_rooms.add(((CRoom)received.content).room_id);
+                        }
                 }
 
             } catch (IOException ex) {
@@ -47,6 +55,13 @@ class Listen extends Thread {
 
     }
     
+     void addRoomToTable(CRoom cRoom){
+         Chatbox chatbox = new Chatbox(cRoom);
+         chatbox.chat_box_nickname="NONE";
+         Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
+         Client.screen.room_table_model.addRow(new Object[]{chatbox});
+     }
+     
      void addListToTable(Message message){
         
         if (message.cast_type==Message.Cast_Type.ROOM_LIST) {
