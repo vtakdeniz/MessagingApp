@@ -15,7 +15,10 @@ public class SClient {
     ObjectOutputStream socketOutput;
     ObjectInputStream socketInput;
     Listen listenThread;
+    String nickname;
+    
     public SClient(Socket incoming_socket, int id) {
+        this.nickname=nickname;
         this.socket = incoming_socket;
         this.id = id;
         try {
@@ -50,6 +53,9 @@ public class SClient {
                          if(message.chat_type==Message.Chat_Type.ROOM_MESSAGE){
                          Server.broadcastToRoom((CRoom)message.receiver, currentClient, message);
                          }
+                         else{
+                         Server.SendToUser(currentClient,message);
+                         }
                          break;
                      case CONN_REQ:
                          Server.handleRequest(currentClient, message);
@@ -57,6 +63,10 @@ public class SClient {
                      case CREATE:
                          Server.CreateRoom(currentClient,message);
                          break;
+                     case NICKNAME:
+                         nickname = (String)message.content;
+                         Server.injectUser(SClient.this);
+                
                  }
                     //Server.Send(currentClient.adversary,received);
 

@@ -14,6 +14,12 @@ import java.io.Serializable;
 public class CClient implements Serializable{
     public int client_id;
     public String client_nickname;
+   
+    public CClient(int clientid,String nickname){
+        this.client_id=clientid;
+        this.client_nickname=nickname;
+    }
+    
      @Override
     public String toString(){
         return this.client_nickname;

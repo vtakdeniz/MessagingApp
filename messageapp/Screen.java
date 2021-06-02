@@ -50,6 +50,7 @@ public class Screen extends javax.swing.JFrame {
         message_screen_panel.setVisible(false);
         create_screen_panel.setVisible(false);
         message_list.setModel(new DefaultListModel());
+        create_screen_panel.setBackground(Color.decode("#a39a70"));
     }
 
     /**
@@ -256,14 +257,12 @@ public class Screen extends javax.swing.JFrame {
                             .addComponent(jLabel2)
                             .addComponent(room_create_text, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 74, Short.MAX_VALUE))))
-            .addGroup(create_screen_panelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jSeparator5))
+            .addComponent(jSeparator5, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         create_screen_panelLayout.setVerticalGroup(
             create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(create_screen_panelLayout.createSequentialGroup()
-                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -276,7 +275,7 @@ public class Screen extends javax.swing.JFrame {
                 .addGroup(create_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancel_button)
                     .addComponent(create_screen_button))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -406,7 +405,17 @@ public class Screen extends javax.swing.JFrame {
     }//GEN-LAST:event_back_buttonActionPerformed
 
     private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_buttonActionPerformed
-        if (Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
+        if (chosen_chatbox.chat_type == Message.Chat_Type.ROOM_MESSAGE && Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
+            Message message = new Message(Message.Type.TEXT);
+            message.chat_type = Screen.chosen_chatbox.chat_type;
+            message.content = text_field.getText();
+            message.receiver = Screen.chosen_chatbox.getReceiver();
+            message.nickname = Screen.chosen_chatbox.getNickName();
+            Client.Send(message);
+            Screen.chosen_chatbox.list_model.addElement("You : " + text_field.getText());
+            text_field.setText("");
+        } else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
+            System.out.println("DEBUG :: send button screen : "+" in pvp message  :: "+chosen_chatbox.cclient.client_id);
             Message message = new Message(Message.Type.TEXT);
             message.chat_type = Screen.chosen_chatbox.chat_type;
             message.content = text_field.getText();
@@ -428,6 +437,7 @@ public class Screen extends javax.swing.JFrame {
 
 
     private void create_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_buttonActionPerformed
+
         create_screen_panel.setVisible(true);
         start_panel.setEnabled(false);
 
@@ -490,7 +500,8 @@ public class Screen extends javax.swing.JFrame {
         if (message.chat_type == Message.Chat_Type.ROOM_MESSAGE) {
             return IntToRoomChatMap.get(((CRoom) message.receiver).room_id);
         } else if (message.chat_type == Message.Chat_Type.PVP_MESSAGE) {
-            return IntToClientChatMap.get(((CClient) message.receiver).client_id);
+            System.out.println("inside getchatbox scren method : "+ ((CClient) message.sender).client_id);
+            return IntToClientChatMap.get(((CClient) message.sender).client_id);
         }
         return null;
     }

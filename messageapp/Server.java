@@ -19,16 +19,20 @@ class ServerThread extends Thread {
                 Socket clientSocket = Server.serverSocket.accept();
                 Server.print("One client accepted");
                 SClient Sclient = new SClient(clientSocket, Server.client_id);
-
+                Server.intToClientMap.put(Sclient.id, Sclient);
                 Message rooms_message = new Message(Message.Type.LIST);
                 rooms_message.cast_type = Message.Cast_Type.ROOM_LIST;
                 rooms_message.content = Server.castRooms(Server.Rooms);
 
-                Server.Send(Sclient, rooms_message);
+                Message users_message = new Message(Message.Type.LIST);
+                users_message.cast_type = Message.Cast_Type.USER_LIST;
+                users_message.content = Server.castClients(Server.Clients);
+                
 
-                /*for (SRoom rooms : Server.Rooms) {
-                rooms.clients.add(Sclient);
-                }*/
+                Server.Send(Sclient, users_message);
+                Server.Send(Sclient, rooms_message);
+                
+                
                 Server.client_id++;
                 Server.Clients.add(Sclient);
                 Sclient.listenThread.start();
@@ -55,18 +59,7 @@ public class Server {
 
     public static void Start(int openingport) {
         try {
-            SRoom s1 = new SRoom();
-            s1.room_id = room_id;
-            s1.room_name = "test1";
-            room_id++;
-            SRoom s2 = new SRoom();
-            s2.room_id = room_id;
-            s2.room_name = "test2";
-            room_id++;
-            mapRoom(s1);
-            mapRoom(s2);
-            Server.Rooms.add(s1);
-            Server.Rooms.add(s2);
+            initBaseRooms();
             Server.port = openingport;
             Server.serverSocket = new ServerSocket(Server.port);
 
@@ -94,6 +87,35 @@ public class Server {
         }
     }
 
+    public static void initBaseRooms() {
+        SRoom s1 = new SRoom();
+        s1.room_id = room_id;
+        s1.room_name = "Chat Room 1";
+        room_id++;
+        SRoom s2 = new SRoom();
+        s2.room_id = room_id;
+        s2.room_name = "Chat Room 2";
+        room_id++;
+        mapRoom(s1);
+        mapRoom(s2);
+
+        SRoom s3 = new SRoom();
+        s3.room_id = room_id;
+        s3.room_name = "Chat Room 3";
+        room_id++;
+        SRoom s4 = new SRoom();
+        s4.room_id = room_id;
+        s4.room_name = "Chat Room 4";
+        room_id++;
+        mapRoom(s3);
+        mapRoom(s4);
+
+        Server.Rooms.add(s1);
+        Server.Rooms.add(s2);
+        Server.Rooms.add(s3);
+        Server.Rooms.add(s4);
+    }
+
     public static void broadcastToNotfRoom(SRoom sRoom, SClient sClient, Object message) {
 
         ArrayList<SClient> room_clients = sRoom.clients;
@@ -101,6 +123,26 @@ public class Server {
         for (SClient room_client : room_clients) {
             Send(room_client, message);
         }
+    }
+    
+    public static void injectUser(SClient sClient){
+        CClient cClient = castClient(sClient);
+        Message client_injection = new Message(Message.Type.INJECTION);
+        client_injection.cast_type= Message.Cast_Type.CLIENT;
+        client_injection.content=cClient;
+        for (SClient Client : Clients) {
+            if (Client==sClient) {
+                continue;
+            }
+            Send(Client, client_injection);
+        }
+
+    }
+    
+    public static void SendToUser(SClient sender_client,Message message){
+     SClient sClient = intToClientMap.get(((CClient)message.receiver).client_id);
+     message.sender=castClient(sender_client);
+     Server.Send(sClient, message);
     }
 
     public static void handleRequest(SClient sClient, Message message) {
@@ -124,12 +166,12 @@ public class Server {
         Rooms.add(sRoom);
         intToRoomMap.put(sRoom.room_id, sRoom);
         CRoom cRoom = castRoom(sRoom, message.nickname);
-        
+
         Message injection_message = new Message(Message.Type.INJECTION);
         injection_message.cast_type = Message.Cast_Type.ROOM;
         injection_message.content = cRoom;
         BroadCast(injection_message);
-        
+
         Message room_create_message = new Message(Message.Type.ROOM_CREATE_NOTF);
         room_create_message.notf_type = Message.Notf_Type.SUCCES;
         room_create_message.content = cRoom;
@@ -170,6 +212,20 @@ public class Server {
         cRoom.room_id = sRoom.room_id;
         cRoom.room_name = sRoom.room_name;
         return cRoom;
+    }
+
+    static ArrayList<CClient> castClients(ArrayList<SClient> sClients) {
+        ArrayList<CClient> cClients = new ArrayList<>();
+
+        for (SClient sclient : sClients) {
+            cClients.add(castClient(sclient));
+        }
+        return cClients;
+    }
+
+    static CClient castClient(SClient sClient) {
+        CClient cClient = new CClient(sClient.id,sClient.nickname);
+        return cClient;
     }
 
     static CRoom castRoom(SRoom sRoom, String creator) {

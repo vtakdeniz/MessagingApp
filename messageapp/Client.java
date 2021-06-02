@@ -11,35 +11,39 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
-
 class Listen extends Thread {
+
     public void run() {
         while (Client.socket.isConnected()) {
             try {
-                Message received = (Message)(Client.socketInput.readObject());
+                Message received = (Message) (Client.socketInput.readObject());
                 switch (received.type) {
                     case LIST:
                         addListToTable(received);
                         break;
                     case TEXT:
-                        String text = received.nickname+" : "+(String)received.content;
+                        String text = received.nickname + " : " + (String) received.content;
                         Chatbox chatbox = Screen.getChatbox(received);
                         chatbox.list_model.addElement(text);
                         break;
                     case NOTIFICATION:
-                        if(received.notf_type==Message.Notf_Type.SUCCES){
-                        Client.joined_rooms.add(((CRoom)received.content).room_id);
-                        Screen.IntToRoomChatMap.get(((CRoom)received.content).room_id).chat_box_nickname=received.nickname;
+                        if (received.notf_type == Message.Notf_Type.SUCCES) {
+                            Client.joined_rooms.add(((CRoom) received.content).room_id);
+                            Screen.IntToRoomChatMap.get(((CRoom) received.content).room_id).chat_box_nickname = received.nickname;
                         }
                         break;
                     case INJECTION:
-                        if (received.cast_type==Message.Cast_Type.ROOM) {
-                            addRoomToTable((CRoom)received.content);
+                        if (received.cast_type == Message.Cast_Type.ROOM) {
+                            addRoomToTable((CRoom) received.content);
+                        } else {
+                            setChatBox((CClient)received.content);
                         }
+                        break;
                     case ROOM_CREATE_NOTF:
-                        if (received.notf_type==Message.Notf_Type.SUCCES) {
-                            Client.joined_rooms.add(((CRoom)received.content).room_id);
+                        if (received.notf_type == Message.Notf_Type.SUCCES) {
+                            Client.joined_rooms.add(((CRoom) received.content).room_id);
                         }
+                        break;
                 }
 
             } catch (IOException ex) {
@@ -54,43 +58,48 @@ class Listen extends Thread {
         }
 
     }
-    
-     void addRoomToTable(CRoom cRoom){
-         Chatbox chatbox = new Chatbox(cRoom);
-         chatbox.chat_box_nickname="NONE";
-         Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
-         Client.screen.room_table_model.addRow(new Object[]{chatbox});
-     }
-     
-     void addListToTable(Message message){
-        
-        if (message.cast_type==Message.Cast_Type.ROOM_LIST) {
-            ArrayList <CRoom> rooms = (ArrayList <CRoom>)message.content;
+
+    void addRoomToTable(CRoom cRoom) {
+        Chatbox chatbox = new Chatbox(cRoom);
+        chatbox.chat_box_nickname = "NONE";
+        Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
+        Client.screen.room_table_model.addRow(new Object[]{chatbox});
+    }
+
+    void addClientToTable(CClient cClient) {
+        Chatbox chatbox = new Chatbox(cClient);
+        chatbox.chatbox_name=cClient.client_nickname;
+        Screen.IntToRoomChatMap.put(cClient.client_id, chatbox);
+        Client.screen.client_table_model.addRow(new Object[]{chatbox});
+    }
+
+    void addListToTable(Message message) {
+
+        if (message.cast_type == Message.Cast_Type.ROOM_LIST) {
+            ArrayList<CRoom> rooms = (ArrayList<CRoom>) message.content;
             for (CRoom room : rooms) {
-              //  Client.screen.room_table_model.addRow(new Object[]{room});
                 setChatBox(room);
             }
-        }
-        else{
-            ArrayList <CClient> cclients = (ArrayList <CClient>)message.content;
+        } else {
+            ArrayList<CClient> cclients = (ArrayList<CClient>) message.content;
             for (CClient cClient : cclients) {
-               // Client.screen.client_table_model.addRow(new Object[]{cClient});
                 setChatBox(cClient);
             }
         }
     }
-        
-     void setChatBox(CRoom cRoom){
+
+    void setChatBox(CRoom cRoom) {
         Chatbox chatbox = new Chatbox(cRoom);
-        chatbox.chat_box_nickname="NONE";
+        chatbox.chat_box_nickname = "NONE";
         Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
         Client.screen.room_table_model.addRow(new Object[]{chatbox});
-     }
-     void setChatBox(CClient cClient){
+    }
+
+    void setChatBox(CClient cClient) {
         Chatbox chatbox = new Chatbox(cClient);
         Screen.IntToClientChatMap.put(cClient.client_id, chatbox);
         Client.screen.client_table_model.addRow(new Object[]{chatbox});
-     }
+    }
 
 }
 
@@ -101,13 +110,14 @@ public class Client {
     public static Socket socket;
     public static Listen listenMe;
     public static Screen screen;
-    public static String nick_name  ;
+    public static String nick_name;
     public static CClient cclient;
     public static ArrayList<Integer> joined_rooms;
-    
-    public static void Start(String ip, int port,String username) {
+
+    public static void Start(String ip, int port, String username) {
         try {
-            joined_rooms= new ArrayList<>();
+
+            joined_rooms = new ArrayList<>();
             Client.nick_name = username;
             screen = new Screen();
             screen.setVisible(true);
@@ -117,10 +127,7 @@ public class Client {
             Client.socketOutput = new ObjectOutputStream(Client.socket.getOutputStream());
             Client.listenMe = new Listen();
             Client.listenMe.start();
-            Client.cclient= new CClient();
-            cclient.client_id=-1;
-            cclient.client_nickname=username;
-            
+            sendNickName();
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -141,6 +148,7 @@ public class Client {
         }
 
     }
+
     public static void Send(Object msg) {
         try {
             Client.socketOutput.writeObject(msg);
@@ -149,12 +157,17 @@ public class Client {
         }
 
     }
+
+    public static void sendNickName() {
+        Message nickname = new Message(Message.Type.NICKNAME);
+        nickname.content = Client.nick_name;
+        Send(nickname);
+    }
+
     public static void print(String msg) {
 
         System.out.println(msg);
 
     }
-
-
 
 }
