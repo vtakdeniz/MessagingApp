@@ -177,14 +177,14 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="create_button" alignment="1" min="-2" pref="156" max="-2" attributes="0"/>
+                      <Component id="stat_room_label" min="-2" pref="198" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="453" max="32767" attributes="0"/>
                   <Component id="choose_button" min="-2" pref="148" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <Component id="stat_room_label" min="-2" pref="198" max="-2" attributes="0"/>
-                  <EmptySpace min="0" pref="614" max="32767" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" alignment="0" pref="812" max="32767" attributes="0"/>
@@ -212,8 +212,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Component id="stat_room_label" min="-2" pref="47" max="-2" attributes="0"/>
-                  <EmptySpace pref="509" max="32767" attributes="0"/>
-                  <Component id="choose_button" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="533" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="choose_button" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="create_button" alignment="3" max="32767" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
@@ -316,6 +319,14 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="create_button">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Create Room"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="create_buttonActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>

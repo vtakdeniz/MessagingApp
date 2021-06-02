@@ -37,7 +37,6 @@ public class Screen extends javax.swing.JFrame {
      * Map<Integer, DefaultListModel> intToClientDlmMap = new
      * HashMap<Integer, DefaultListModel>();
      */
-
     public Screen() {
         initComponents();
 
@@ -77,6 +76,7 @@ public class Screen extends javax.swing.JFrame {
         user_table = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         room_table = new javax.swing.JTable();
+        create_button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -194,17 +194,24 @@ public class Screen extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(room_table);
 
+        create_button.setText("Create Room");
+        create_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                create_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout start_panelLayout = new javax.swing.GroupLayout(start_panel);
         start_panel.setLayout(start_panelLayout);
         start_panelLayout.setHorizontalGroup(
             start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, start_panelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(start_panelLayout.createSequentialGroup()
+                .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(create_button, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 453, Short.MAX_VALUE)
                 .addComponent(choose_button, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
-            .addGroup(start_panelLayout.createSequentialGroup()
-                .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 614, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 812, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,8 +231,10 @@ public class Screen extends javax.swing.JFrame {
             start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, start_panelLayout.createSequentialGroup()
                 .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 509, Short.MAX_VALUE)
-                .addComponent(choose_button)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 533, Short.MAX_VALUE)
+                .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(choose_button)
+                    .addComponent(create_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(start_panelLayout.createSequentialGroup()
@@ -277,20 +286,32 @@ public class Screen extends javax.swing.JFrame {
 
         int row_room = room_table.getSelectedRow();
         int row_user = user_table.getSelectedRow();
-        
-        if (row_room != -1 ) {
+
+        if (row_room != -1) {
             Screen.chosen_chatbox = (Chatbox) room_table.getValueAt(room_table.getSelectedRow(), 0);
-            message_list.setModel(chosen_chatbox.list_model);
+            DefaultListModel chosen_model = chosen_chatbox.list_model;
+            message_list.setModel(chosen_model);
+            if (!Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
+                text_field.setText("It looks like you are not a member of this group. Please enter a username here to continue :");
+                ArrayList<Integer> roo = Client.joined_rooms;
+                for (Integer cRoom : roo) {
+                    System.out.println("joined rooms "+cRoom+" name "+cRoom);
+                }
+                System.out.println("chosen box room " + chosen_chatbox.croom.room_id+"  name  "+chosen_chatbox.croom.room_name);
+            }
+            else{
+                text_field.setText("");
+                System.out.println("in the room");
+            }
+                
             message_screen_panel.setVisible(true);
             start_panel.setVisible(false);
-        } 
-        else if(row_user != -1){
+        } else if (row_user != -1) {
             Screen.chosen_chatbox = (Chatbox) user_table.getValueAt(user_table.getSelectedRow(), 0);
             message_list.setModel(chosen_chatbox.list_model);
             message_screen_panel.setVisible(true);
             start_panel.setVisible(false);
-        }
-        else {
+        } else {
             JOptionPane.showMessageDialog(rootPane, "Please select a chat from either of the tables", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_choose_buttonActionPerformed
@@ -301,15 +322,29 @@ public class Screen extends javax.swing.JFrame {
     }//GEN-LAST:event_back_buttonActionPerformed
 
     private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_buttonActionPerformed
-       Message message = new Message(Message.Type.TEXT);
-       message.chat_type = Screen.chosen_chatbox.chat_type;
-       message.content = text_field.getText();
-       message.receiver = Screen.chosen_chatbox.getReceiver();
-       message.nickname = Screen.chosen_chatbox.getNickName();
-       Client.Send(message);
-       Screen.chosen_chatbox.list_model.addElement("You : "+text_field.getText());
-       text_field.setText("");
+        if (Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
+            System.out.println("in the room");
+            Message message = new Message(Message.Type.TEXT);
+            message.chat_type = Screen.chosen_chatbox.chat_type;
+            message.content = text_field.getText();
+            message.receiver = Screen.chosen_chatbox.getReceiver();
+            message.nickname = Screen.chosen_chatbox.getNickName();
+            Client.Send(message);
+            Screen.chosen_chatbox.list_model.addElement("You : " + text_field.getText());
+            text_field.setText("");
+        } else {
+            System.out.println("not in the room");
+            Message m = new Message(Message.Type.CONN_REQ);
+            m.nickname = text_field.getText();
+            m.chat_type = Message.Chat_Type.ROOM_MESSAGE;
+            m.content = chosen_chatbox.croom;
+            Client.Send(m);
+        }
     }//GEN-LAST:event_send_buttonActionPerformed
+
+    private void create_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_buttonActionPerformed
+
+    }//GEN-LAST:event_create_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -348,17 +383,18 @@ public class Screen extends javax.swing.JFrame {
         });
     }
 
-    public static Chatbox getChatbox(Message message){
-        if (message.chat_type==Message.Chat_Type.ROOM_MESSAGE) {
-            System.out.println("chatbox screen method");
-            return IntToRoomChatMap.get(((CRoom)message.receiver).room_id);
+    public static Chatbox getChatbox(Message message) {
+        if (message.chat_type == Message.Chat_Type.ROOM_MESSAGE) {
+            System.out.println("chatbox getchatbx screen method");
+            return IntToRoomChatMap.get(((CRoom) message.receiver).room_id);
         }
-        return IntToClientChatMap.get(((CClient)message.receiver).client_id);
+        return IntToClientChatMap.get(((CClient) message.receiver).client_id);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_button;
     private javax.swing.JButton choose_button;
+    private javax.swing.JButton create_button;
     private javax.swing.JLabel current_room_label;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

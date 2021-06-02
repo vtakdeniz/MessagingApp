@@ -26,6 +26,12 @@ class Listen extends Thread {
                         Chatbox chatbox = Screen.getChatbox(received);
                         chatbox.list_model.addElement(text);
                         break;
+                    case NOTIFICATION:
+                        if(received.notf_type==Message.Notf_Type.SUCCES){
+                        Client.joined_rooms.add(((CRoom)received.content).room_id);
+                        Screen.IntToRoomChatMap.get(((CRoom)received.content).room_id).chat_box_nickname=received.nickname;
+                        }
+                        break;
                 }
 
             } catch (IOException ex) {
@@ -61,7 +67,7 @@ class Listen extends Thread {
         
      void setChatBox(CRoom cRoom){
         Chatbox chatbox = new Chatbox(cRoom);
-        chatbox.chat_box_nickname="DEBUG";
+        chatbox.chat_box_nickname="NONE";
         Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
         Client.screen.room_table_model.addRow(new Object[]{chatbox});
      }
@@ -82,9 +88,11 @@ public class Client {
     public static Screen screen;
     public static String nick_name  ;
     public static CClient cclient;
+    public static ArrayList<Integer> joined_rooms;
     
     public static void Start(String ip, int port,String username) {
         try {
+            joined_rooms= new ArrayList<>();
             Client.nick_name = username;
             screen = new Screen();
             screen.setVisible(true);

@@ -45,10 +45,15 @@ public class SClient {
                     
                  Object received = currentClient.socketInput.readObject();
                  Message message = (Message)received;
-                 switch (message.chat_type){
-                     case ROOM_MESSAGE:
+                 switch (message.type){
+                     case TEXT:
+                         if(message.chat_type==Message.Chat_Type.ROOM_MESSAGE){
                          Server.broadcastToRoom((CRoom)message.receiver, currentClient, message);
-                         
+                         }
+                         break;
+                     case CONN_REQ:
+                         Server.handleRequest(currentClient, message);
+                         break;
                  }
                     //Server.Send(currentClient.adversary,received);
 

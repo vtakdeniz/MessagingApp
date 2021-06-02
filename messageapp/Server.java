@@ -27,9 +27,9 @@ class ServerThread extends Thread {
                 
                 Server.Send(Sclient, rooms_message);
                 
-                for (SRoom rooms : Server.Rooms) {
+                /*for (SRoom rooms : Server.Rooms) {
                 rooms.clients.add(Sclient);
-                }
+                }*/
                 
                 Server.client_id++;
                 Server.Clients.add(Sclient);
@@ -83,7 +83,9 @@ public class Server {
          SRoom sRoom = intToRoomMap.get(cRoom.room_id);
          ArrayList<SClient> room_clients = sRoom.clients;
          if (!room_clients.contains(sClient)) {
-            return;
+             Message m= new Message(Message.Type.CONN_REQ);
+             
+             return;
          }
          
          for (SClient room_client : room_clients) {
@@ -91,6 +93,17 @@ public class Server {
              Send(room_client, message);
          }
     }
+    
+    public static void handleRequest(SClient sClient,Message message){
+        SRoom sRoom = intToRoomMap.get(((CRoom)message.content).room_id);
+        sRoom.clients.add(sClient);
+        Message m = new Message(Message.Type.NOTIFICATION);
+        m.notf_type= Message.Notf_Type.SUCCES;
+        m.nickname=message.nickname;
+        m.content=message.content;
+        Send(sClient, m);
+    }
+    
     
     public static void Send(SClient cl, Object msg) {
 
