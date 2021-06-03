@@ -165,6 +165,7 @@ public class Server {
         SRoom sRoom = initializeRoom(((String) message.content), sClient);
         Rooms.add(sRoom);
         intToRoomMap.put(sRoom.room_id, sRoom);
+        sRoom.clients.add(sClient);
         CRoom cRoom = castRoom(sRoom, message.nickname);
 
         Message injection_message = new Message(Message.Type.INJECTION);
@@ -175,6 +176,8 @@ public class Server {
         Message room_create_message = new Message(Message.Type.ROOM_CREATE_NOTF);
         room_create_message.notf_type = Message.Notf_Type.SUCCES;
         room_create_message.content = cRoom;
+        room_create_message.nickname=message.nickname;
+        room_create_message.chat_type=Message.Chat_Type.ROOM_MESSAGE;
         Send(sClient, room_create_message);
     }
 

@@ -12,7 +12,7 @@ package messageapp;
 public class ClientStart {
     public static void main(String[] args) {
       
-        Client.Start("127.0.0.1", 2005,"ensonu");
+        Client.Start("127.0.0.1", 2005,"eilksonu");
         
     }
 }

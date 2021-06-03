@@ -506,6 +506,13 @@ public class Screen extends javax.swing.JFrame {
         return null;
     }
 
+    public static Chatbox getRoomChatbox(CRoom cRoom){
+    
+        return IntToRoomChatMap.get(cRoom.room_id);
+        
+    }
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_button;
     private javax.swing.JToggleButton cancel_button;

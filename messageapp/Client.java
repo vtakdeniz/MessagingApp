@@ -34,7 +34,7 @@ class Listen extends Thread {
                         break;
                     case INJECTION:
                         if (received.cast_type == Message.Cast_Type.ROOM) {
-                            addRoomToTable((CRoom) received.content);
+                            setChatBox((CRoom) received.content);
                         } else {
                             setChatBox((CClient)received.content);
                         }
@@ -42,6 +42,8 @@ class Listen extends Thread {
                     case ROOM_CREATE_NOTF:
                         if (received.notf_type == Message.Notf_Type.SUCCES) {
                             Client.joined_rooms.add(((CRoom) received.content).room_id);
+                            Chatbox c= Screen.getRoomChatbox((CRoom)received.content);
+                            c.chat_box_nickname=received.nickname;
                         }
                         break;
                 }
