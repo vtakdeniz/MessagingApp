@@ -176,7 +176,7 @@ public class Screen extends javax.swing.JFrame {
         });
 
         stat_room_label.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        stat_room_label.setText("    Rooms : ");
+        stat_room_label.setText("   Rooms : ");
 
         room_label.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         room_label.setText("  Users : ");
@@ -192,6 +192,11 @@ public class Screen extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        user_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                user_tableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(user_table);
 
         room_table.setModel(new javax.swing.table.DefaultTableModel(
@@ -205,6 +210,11 @@ public class Screen extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        room_table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                room_tableMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(room_table);
 
         create_button.setText("Create Room");
@@ -284,9 +294,8 @@ public class Screen extends javax.swing.JFrame {
         start_panelLayout.setHorizontalGroup(
             start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(start_panelLayout.createSequentialGroup()
-                .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(create_button, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
+                .addComponent(create_button, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(choose_button, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
@@ -294,6 +303,9 @@ public class Screen extends javax.swing.JFrame {
                 .addGap(183, 183, 183)
                 .addComponent(create_screen_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(244, Short.MAX_VALUE))
+            .addGroup(start_panelLayout.createSequentialGroup()
+                .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 841, Short.MAX_VALUE))
             .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -315,7 +327,7 @@ public class Screen extends javax.swing.JFrame {
                 .addComponent(stat_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(66, 66, 66)
                 .addComponent(create_screen_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 224, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
                 .addGroup(start_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(choose_button)
                     .addComponent(create_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -372,28 +384,27 @@ public class Screen extends javax.swing.JFrame {
         int row_user = user_table.getSelectedRow();
 
         if (row_room != -1) {
+            stat_current_room_label.setText("Current Room : ");
             Screen.chosen_chatbox = (Chatbox) room_table.getValueAt(room_table.getSelectedRow(), 0);
             DefaultListModel chosen_model = chosen_chatbox.list_model;
             message_list.setModel(chosen_model);
             if (!Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
                 text_field.setText("It looks like you are not a member of this group. Please enter a username here to continue :");
-                ArrayList<Integer> roo = Client.joined_rooms;
-                for (Integer cRoom : roo) {
-                    System.out.println("joined rooms " + cRoom + " name " + cRoom);
-                }
-                System.out.println("chosen box room " + chosen_chatbox.croom.room_id + "  name  " + chosen_chatbox.croom.room_name);
+                current_room_label.setText(chosen_chatbox.chatbox_name);
             } else {
                 text_field.setText("");
-                System.out.println("in the room");
+                current_room_label.setText(chosen_chatbox.chatbox_name);
             }
 
             message_screen_panel.setVisible(true);
             start_panel.setVisible(false);
         } else if (row_user != -1) {
+            stat_current_room_label.setText("Current User : ");
             Screen.chosen_chatbox = (Chatbox) user_table.getValueAt(user_table.getSelectedRow(), 0);
             message_list.setModel(chosen_chatbox.list_model);
             message_screen_panel.setVisible(true);
             start_panel.setVisible(false);
+            current_room_label.setText(chosen_chatbox.cclient.client_nickname);
         } else {
             JOptionPane.showMessageDialog(rootPane, "Please select a chat from either of the tables", "Error", JOptionPane.WARNING_MESSAGE);
         }
@@ -415,7 +426,6 @@ public class Screen extends javax.swing.JFrame {
             Screen.chosen_chatbox.list_model.addElement("You : " + text_field.getText());
             text_field.setText("");
         } else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
-            System.out.println("DEBUG :: send button screen : "+" in pvp message  :: "+chosen_chatbox.cclient.client_id);
             Message message = new Message(Message.Type.TEXT);
             message.chat_type = Screen.chosen_chatbox.chat_type;
             message.content = text_field.getText();
@@ -459,6 +469,14 @@ public class Screen extends javax.swing.JFrame {
         start_panel.setEnabled(true);
     }//GEN-LAST:event_cancel_buttonActionPerformed
 
+    private void room_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_room_tableMouseClicked
+        user_table.getSelectionModel().clearSelection();
+    }//GEN-LAST:event_room_tableMouseClicked
+
+    private void user_tableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_user_tableMouseClicked
+        room_table.getSelectionModel().clearSelection();
+    }//GEN-LAST:event_user_tableMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -500,19 +518,18 @@ public class Screen extends javax.swing.JFrame {
         if (message.chat_type == Message.Chat_Type.ROOM_MESSAGE) {
             return IntToRoomChatMap.get(((CRoom) message.receiver).room_id);
         } else if (message.chat_type == Message.Chat_Type.PVP_MESSAGE) {
-            System.out.println("inside getchatbox scren method : "+ ((CClient) message.sender).client_id);
             return IntToClientChatMap.get(((CClient) message.sender).client_id);
         }
         return null;
     }
 
-    public static Chatbox getRoomChatbox(CRoom cRoom){
-    
+    public static Chatbox getRoomChatbox(CRoom cRoom) {
+
         return IntToRoomChatMap.get(cRoom.room_id);
-        
+
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back_button;
     private javax.swing.JToggleButton cancel_button;

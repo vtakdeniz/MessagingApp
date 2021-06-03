@@ -30,6 +30,7 @@ class Listen extends Thread {
                         if (received.notf_type == Message.Notf_Type.SUCCES) {
                             Client.joined_rooms.add(((CRoom) received.content).room_id);
                             Screen.IntToRoomChatMap.get(((CRoom) received.content).room_id).chat_box_nickname = received.nickname;
+                            
                         }
                         break;
                     case INJECTION:
