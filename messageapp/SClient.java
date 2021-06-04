@@ -83,10 +83,18 @@ public class SClient {
 
                 } catch (IOException e) {
                     Server.Clients.remove(currentClient);
+                    Message deletion_message = new Message(Message.Type.DELETION);
+                    deletion_message.cast_type=Message.Cast_Type.CLIENT;
+                    deletion_message.content= Server.castClient(currentClient);
+                    Server.BroadCast(deletion_message);
                     e.printStackTrace();
                     break;
                 } catch (ClassNotFoundException e) {
                     Server.Clients.remove(currentClient);
+                    Message deletion_message = new Message(Message.Type.DELETION);
+                    deletion_message.cast_type=Message.Cast_Type.CLIENT;
+                    deletion_message.content= Server.castClient(currentClient);
+                    Server.BroadCast(deletion_message);
                     e.printStackTrace();
                     break;
                 }

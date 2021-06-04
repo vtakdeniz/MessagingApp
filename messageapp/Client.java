@@ -66,6 +66,18 @@ class Listen extends Thread {
                             bos.write(received.file_byte, 0, received.filesize);
                             bos.close();
                         }
+                        break;
+                    
+                    case DELETION:
+                        int rowcount = Screen.client_table_model.getRowCount();
+                        for (int i = 0; i < rowcount; i++) {
+                            Chatbox chat_box = (Chatbox)Screen.client_table_model.getValueAt(i, 0);
+                            System.out.println(i);
+                            if (chat_box.cclient.client_id==((CClient)received.content).client_id) {
+                                Screen.client_table_model.removeRow(i);
+                                break;
+                            }
+                        }
                 }
 
             } catch (IOException ex) {
