@@ -6,9 +6,16 @@
 package messageapp;
 
 import java.awt.Color;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -71,6 +78,7 @@ public class Screen extends javax.swing.JFrame {
         current_room_label = new javax.swing.JLabel();
         text_field = new javax.swing.JTextField();
         send_button = new javax.swing.JButton();
+        send_file_button = new javax.swing.JButton();
         start_panel = new javax.swing.JPanel();
         choose_button = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -119,6 +127,13 @@ public class Screen extends javax.swing.JFrame {
             }
         });
 
+        send_file_button.setText("Send a file");
+        send_file_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                send_file_buttonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout message_screen_panelLayout = new javax.swing.GroupLayout(message_screen_panel);
         message_screen_panel.setLayout(message_screen_panelLayout);
         message_screen_panelLayout.setHorizontalGroup(
@@ -136,9 +151,11 @@ public class Screen extends javax.swing.JFrame {
                         .addComponent(stat_current_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(current_room_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, message_screen_panelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(send_file_button, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
             .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +176,9 @@ public class Screen extends javax.swing.JFrame {
                 .addGap(30, 30, 30)
                 .addComponent(text_field, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(send_file_button))
                 .addContainerGap())
             .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, message_screen_panelLayout.createSequentialGroup()
@@ -477,6 +496,67 @@ public class Screen extends javax.swing.JFrame {
         room_table.getSelectionModel().clearSelection();
     }//GEN-LAST:event_user_tableMouseClicked
 
+    private void send_file_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_file_buttonActionPerformed
+
+        if (chosen_chatbox.chat_type == Message.Chat_Type.ROOM_MESSAGE && Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
+            Message message = new Message(Message.Type.FILE);
+            message.chat_type = Screen.chosen_chatbox.chat_type;
+
+            try {
+            String filename = "/home/medit/NetBeansProjects/MessageApp/src/messageapp/spongebob_PNG1.png";
+            message.content=filename;
+            File file_to_send = new File(filename);
+            int filesize = (int)file_to_send.length();
+            message.file_byte = new byte[filesize];
+            message.filesize=filesize;
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file_to_send));
+            bis.read(message.file_byte, 0, message.file_byte.length);
+            message.receiver = Screen.chosen_chatbox.getReceiver();
+            message.nickname = Screen.chosen_chatbox.getNickName();
+            Client.Send(message);
+            Screen.chosen_chatbox.list_model.addElement("You have sent a file ");
+            bis.close();
+            }
+            catch (FileNotFoundException ex) {
+                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        } else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
+            BufferedInputStream bis = null;
+            Message message = new Message(Message.Type.FILE);
+            
+            try {
+                String filename = "/home/medit/NetBeansProjects/MessageApp/src/messageapp/spongebob_PNG1.png";
+                message.content=filename;
+                File file_to_send = new File(filename);
+                int filesize = (int)file_to_send.length();
+                message.file_byte = new byte[filesize];
+                message.filesize=filesize;
+                bis = new BufferedInputStream(new FileInputStream(file_to_send));
+                bis.read(message.file_byte, 0, message.file_byte.length);
+                message.receiver = Screen.chosen_chatbox.getReceiver();
+                message.nickname = Screen.chosen_chatbox.getNickName();
+                message.chat_type = Screen.chosen_chatbox.chat_type;
+                Client.Send(message);
+                Screen.chosen_chatbox.list_model.addElement("You have sent a file ");
+                bis.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    bis.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }//GEN-LAST:event_send_file_buttonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -554,6 +634,7 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.JLabel room_label;
     private javax.swing.JTable room_table;
     private javax.swing.JButton send_button;
+    private javax.swing.JButton send_file_button;
     private javax.swing.JPanel start_panel;
     private javax.swing.JLabel stat_current_room_label;
     private javax.swing.JLabel stat_room_label;

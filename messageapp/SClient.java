@@ -66,7 +66,16 @@ public class SClient {
                      case NICKNAME:
                          nickname = (String)message.content;
                          Server.injectUser(SClient.this);
-                
+                         break;
+                     case FILE:
+                         if(message.chat_type==Message.Chat_Type.ROOM_MESSAGE){
+                         Server.broadcastToRoom((CRoom)message.receiver, currentClient, message);
+                         }
+                         else{
+                         Server.SendToUser(currentClient,message);
+                         }
+                         break;
+                         
                  }
                     //Server.Send(currentClient.adversary,received);
 

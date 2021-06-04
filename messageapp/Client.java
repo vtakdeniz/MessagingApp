@@ -1,5 +1,7 @@
 package messageapp;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import messageapp.Message;
 
 import java.io.IOException;
@@ -47,6 +49,12 @@ class Listen extends Thread {
                             c.chat_box_nickname=received.nickname;
                         }
                         break;
+                    case FILE:
+                        String FileName = "/home/medit/NetBeansProjects/MessageApp/src/messageapp/spongebob_PNG1test.png";//(String)received.content + "test1";
+                        FileOutputStream fos = new FileOutputStream(FileName);
+                        BufferedOutputStream bos = new BufferedOutputStream(fos);
+                        bos.write(received.file_byte,0,received.filesize);
+                        bos.close();
                 }
 
             } catch (IOException ex) {

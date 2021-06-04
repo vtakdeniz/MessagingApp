@@ -73,10 +73,12 @@
                           <Component id="current_room_label" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace pref="29" max="32767" attributes="0"/>
               </Group>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  <Component id="send_file_button" min="-2" pref="156" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="send_button" min="-2" pref="154" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="55" max="-2" attributes="0"/>
               </Group>
@@ -102,7 +104,10 @@
                   <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                   <Component id="text_field" min="-2" pref="51" max="-2" attributes="0"/>
                   <EmptySpace pref="46" max="32767" attributes="0"/>
-                  <Component id="send_button" min="-2" pref="24" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="send_button" alignment="3" min="-2" pref="24" max="-2" attributes="0"/>
+                      <Component id="send_file_button" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
               <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
@@ -172,6 +177,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="send_buttonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="send_file_button">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Send a file"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="send_file_buttonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
