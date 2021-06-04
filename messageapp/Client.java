@@ -1,6 +1,7 @@
 package messageapp;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import messageapp.Message;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 
 class Listen extends Thread {
 
@@ -32,29 +34,37 @@ class Listen extends Thread {
                         if (received.notf_type == Message.Notf_Type.SUCCES) {
                             Client.joined_rooms.add(((CRoom) received.content).room_id);
                             Screen.IntToRoomChatMap.get(((CRoom) received.content).room_id).chat_box_nickname = received.nickname;
-                            
+
                         }
                         break;
                     case INJECTION:
                         if (received.cast_type == Message.Cast_Type.ROOM) {
                             setChatBox((CRoom) received.content);
                         } else {
-                            setChatBox((CClient)received.content);
+                            setChatBox((CClient) received.content);
                         }
                         break;
                     case ROOM_CREATE_NOTF:
                         if (received.notf_type == Message.Notf_Type.SUCCES) {
                             Client.joined_rooms.add(((CRoom) received.content).room_id);
-                            Chatbox c= Screen.getRoomChatbox((CRoom)received.content);
-                            c.chat_box_nickname=received.nickname;
+                            Chatbox c = Screen.getRoomChatbox((CRoom) received.content);
+                            c.chat_box_nickname = received.nickname;
                         }
                         break;
                     case FILE:
-                        String FileName = "/home/medit/NetBeansProjects/MessageApp/src/messageapp/spongebob_PNG1test.png";//(String)received.content + "test1";
-                        FileOutputStream fos = new FileOutputStream(FileName);
-                        BufferedOutputStream bos = new BufferedOutputStream(fos);
-                        bos.write(received.file_byte,0,received.filesize);
-                        bos.close();
+                        Chatbox chatbox_file = Screen.getChatbox(received);
+                        chatbox_file.list_model.addElement(received.nickname + " has shared a file named : " + (String) received.file_name);
+                        JFileChooser fileChooser = new JFileChooser();
+                        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                        fileChooser.setDialogTitle("Choose a location to save");
+                        int result = fileChooser.showOpenDialog(Client.screen);
+                        if (result == JFileChooser.APPROVE_OPTION) {
+                            File file_to_send = fileChooser.getSelectedFile();
+                            FileOutputStream fos = new FileOutputStream(file_to_send+"/"+received.file_name);
+                            BufferedOutputStream bos = new BufferedOutputStream(fos);
+                            bos.write(received.file_byte, 0, received.filesize);
+                            bos.close();
+                        }
                 }
 
             } catch (IOException ex) {
@@ -79,7 +89,7 @@ class Listen extends Thread {
 
     void addClientToTable(CClient cClient) {
         Chatbox chatbox = new Chatbox(cClient);
-        chatbox.chatbox_name=cClient.client_nickname;
+        chatbox.chatbox_name = cClient.client_nickname;
         Screen.IntToRoomChatMap.put(cClient.client_id, chatbox);
         Client.screen.client_table_model.addRow(new Object[]{chatbox});
     }

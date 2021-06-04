@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -503,56 +504,58 @@ public class Screen extends javax.swing.JFrame {
             message.chat_type = Screen.chosen_chatbox.chat_type;
 
             try {
-            String filename = "/home/medit/NetBeansProjects/MessageApp/src/messageapp/spongebob_PNG1.png";
-            message.content=filename;
-            File file_to_send = new File(filename);
-            int filesize = (int)file_to_send.length();
-            message.file_byte = new byte[filesize];
-            message.filesize=filesize;
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file_to_send));
-            bis.read(message.file_byte, 0, message.file_byte.length);
-            message.receiver = Screen.chosen_chatbox.getReceiver();
-            message.nickname = Screen.chosen_chatbox.getNickName();
-            Client.Send(message);
-            Screen.chosen_chatbox.list_model.addElement("You have sent a file ");
-            bis.close();
-            }
-            catch (FileNotFoundException ex) {
-                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        } else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
-            BufferedInputStream bis = null;
-            Message message = new Message(Message.Type.FILE);
-            
-            try {
-                String filename = "/home/medit/NetBeansProjects/MessageApp/src/messageapp/spongebob_PNG1.png";
-                message.content=filename;
-                File file_to_send = new File(filename);
-                int filesize = (int)file_to_send.length();
-                message.file_byte = new byte[filesize];
-                message.filesize=filesize;
-                bis = new BufferedInputStream(new FileInputStream(file_to_send));
-                bis.read(message.file_byte, 0, message.file_byte.length);
-                message.receiver = Screen.chosen_chatbox.getReceiver();
-                message.nickname = Screen.chosen_chatbox.getNickName();
-                message.chat_type = Screen.chosen_chatbox.chat_type;
-                Client.Send(message);
-                Screen.chosen_chatbox.list_model.addElement("You have sent a file ");
-                bis.close();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Choose a file");
+                int result = fileChooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    //File file_to_send = new File(filename);
+                    File file_to_send = fileChooser.getSelectedFile();
+                    int filesize = (int) file_to_send.length();
+                    message.file_byte = new byte[filesize];
+                    message.filesize = filesize;
+                    message.file_name = file_to_send.getName();
+                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file_to_send));
+                    bis.read(message.file_byte, 0, message.file_byte.length);
+                    message.receiver = Screen.chosen_chatbox.getReceiver();
+                    message.nickname = Screen.chosen_chatbox.getNickName();
+                    Client.Send(message);
+                    Screen.chosen_chatbox.list_model.addElement("You have sent a file named "+file_to_send.getName());
+                    bis.close();
+                }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    bis.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
+
+        } else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
+            BufferedInputStream bis = null;
+            Message message = new Message(Message.Type.FILE);
+
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Choose a file");
+                int result = fileChooser.showOpenDialog(this);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File file_to_send = fileChooser.getSelectedFile();
+                    int filesize = (int) file_to_send.length();
+                    message.file_byte = new byte[filesize];
+                    message.filesize = filesize;
+                    message.file_name = file_to_send.getName();
+                    bis = new BufferedInputStream(new FileInputStream(file_to_send));
+                    bis.read(message.file_byte, 0, message.file_byte.length);
+                    message.receiver = Screen.chosen_chatbox.getReceiver();
+                    message.nickname = Screen.chosen_chatbox.getNickName();
+                    message.chat_type = Screen.chosen_chatbox.chat_type;
+                    Client.Send(message);
+                    Screen.chosen_chatbox.list_model.addElement("You have sent a file named "+file_to_send.getName());
+                    bis.close();
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
+            } 
         }
 
     }//GEN-LAST:event_send_file_buttonActionPerformed

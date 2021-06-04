@@ -15,8 +15,11 @@ public class Message implements java.io.Serializable {
     public Object content;
     public Object receiver;
     public Object sender;
+    
     public byte[] file_byte;
     public int filesize;
+    public String file_dir;
+    public String file_name;
     
     public String nickname;
     
