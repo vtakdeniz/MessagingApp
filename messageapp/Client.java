@@ -53,12 +53,11 @@ class Listen extends Thread {
                         break;
                     case FILE:
                         Chatbox chatbox_file = Screen.getChatbox(received);
-                        chatbox_file.list_model.addElement(received.nickname + " has shared a file named : " + (String) received.file_name);
+                        chatbox_file.list_model.addElement(received.nickname + " has shared a file named : " +received.file_name);
                         JFileChooser fileChooser = new JFileChooser();
                         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                         fileChooser.setDialogTitle("Choose a location to save");
-                        int result = fileChooser.showOpenDialog(Client.screen);
-                        if (result == JFileChooser.APPROVE_OPTION) {
+                        if (fileChooser.showOpenDialog(Client.screen) == JFileChooser.APPROVE_OPTION) {
                             File file_to_send = fileChooser.getSelectedFile();
                             FileOutputStream fos = new FileOutputStream(file_to_send+"/"+received.file_name);
                             BufferedOutputStream bos = new BufferedOutputStream(fos);

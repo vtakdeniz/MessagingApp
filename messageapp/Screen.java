@@ -17,9 +17,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -38,7 +41,6 @@ public class Screen extends javax.swing.JFrame {
     public static Map<Integer, Chatbox> IntToClientChatMap = new HashMap<Integer, Chatbox>();
     public static ArrayList<Chatbox> chatboxes = new ArrayList();
     public static Chatbox chosen_chatbox;
-
     /**
      * deprecated public static ArrayList<DefaultListModel> dlms = new
      * ArrayList(); public static Map<Integer, DefaultListModel> intToRoomDlmMap
@@ -48,7 +50,8 @@ public class Screen extends javax.swing.JFrame {
      */
     public Screen() {
         initComponents();
-
+        
+        
         client_table_model.setColumnIdentifiers(new Object[]{"User Name"});
         user_table.setModel(client_table_model);
 
@@ -59,8 +62,18 @@ public class Screen extends javax.swing.JFrame {
         create_screen_panel.setVisible(false);
         message_list.setModel(new DefaultListModel());
         create_screen_panel.setBackground(Color.decode("#a39a70"));
+        initEmojis();
     }
 
+    public void initEmojis(){
+        emojis.removeAllItems();
+        String emot = "😀 😃 😄 😁 😆 😅 😂 😊 😇 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😛 😝 😜 😎 😏 😒 😞 😔 😟 😕 😣 😖 😫 😩 😢 😭 😠 😡 😳 😱 😨 😰 😥 😓 😶 😐 😑 😯 😦 😧 😮 😲 😴😪 😵 😷 😈 😺 😸 😹 😻 😼 😽 🙀 😿 😾";
+        String emojis[] = emot.split(" ");
+        for (String emoji : emojis) {
+            this.emojis.addItem(emoji);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -80,6 +93,9 @@ public class Screen extends javax.swing.JFrame {
         text_field = new javax.swing.JTextField();
         send_button = new javax.swing.JButton();
         send_file_button = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        pick_emoji_button = new javax.swing.JButton();
+        emojis = new javax.swing.JComboBox<>();
         start_panel = new javax.swing.JPanel();
         choose_button = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -135,30 +151,51 @@ public class Screen extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setText("Type here : ");
+
+        pick_emoji_button.setText("Pick emoji");
+        pick_emoji_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pick_emoji_buttonActionPerformed(evt);
+            }
+        });
+
+        emojis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout message_screen_panelLayout = new javax.swing.GroupLayout(message_screen_panel);
         message_screen_panel.setLayout(message_screen_panelLayout);
         message_screen_panelLayout.setHorizontalGroup(
             message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(message_screen_panelLayout.createSequentialGroup()
-                .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, message_screen_panelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(text_field))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, message_screen_panelLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, message_screen_panelLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(stat_current_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(current_room_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, message_screen_panelLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(send_file_button, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(32, 32, 32)
                 .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
+            .addGroup(message_screen_panelLayout.createSequentialGroup()
+                .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(message_screen_panelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(message_screen_panelLayout.createSequentialGroup()
+                            .addGap(420, 420, 420)
+                            .addComponent(emojis, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(pick_emoji_button, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(31, 31, 31))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, message_screen_panelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(text_field))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, message_screen_panelLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, message_screen_panelLayout.createSequentialGroup()
+                            .addGap(21, 21, 21)
+                            .addComponent(stat_current_room_label, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(current_room_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(29, Short.MAX_VALUE))
             .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(message_screen_panelLayout.createSequentialGroup()
                     .addGap(43, 43, 43)
@@ -174,16 +211,22 @@ public class Screen extends javax.swing.JFrame {
                     .addComponent(current_room_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(text_field, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pick_emoji_button)
+                    .addComponent(emojis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(text_field, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(send_button, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(send_file_button))
                 .addContainerGap())
             .addGroup(message_screen_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, message_screen_panelLayout.createSequentialGroup()
-                    .addContainerGap(556, Short.MAX_VALUE)
+                    .addContainerGap(560, Short.MAX_VALUE)
                     .addComponent(back_button)
                     .addContainerGap()))
         );
@@ -498,16 +541,14 @@ public class Screen extends javax.swing.JFrame {
     }//GEN-LAST:event_user_tableMouseClicked
 
     private void send_file_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_file_buttonActionPerformed
-
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose a file");
         if (chosen_chatbox.chat_type == Message.Chat_Type.ROOM_MESSAGE && Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
             Message message = new Message(Message.Type.FILE);
             message.chat_type = Screen.chosen_chatbox.chat_type;
 
             try {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Choose a file");
-                int result = fileChooser.showOpenDialog(this);
-                if (result == JFileChooser.APPROVE_OPTION) {
+                if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     //File file_to_send = new File(filename);
                     File file_to_send = fileChooser.getSelectedFile();
                     int filesize = (int) file_to_send.length();
@@ -519,7 +560,7 @@ public class Screen extends javax.swing.JFrame {
                     message.receiver = Screen.chosen_chatbox.getReceiver();
                     message.nickname = Screen.chosen_chatbox.getNickName();
                     Client.Send(message);
-                    Screen.chosen_chatbox.list_model.addElement("You have sent a file named "+file_to_send.getName());
+                    Screen.chosen_chatbox.list_model.addElement("You have sent a file named " + file_to_send.getName());
                     bis.close();
                 }
             } catch (FileNotFoundException ex) {
@@ -533,10 +574,7 @@ public class Screen extends javax.swing.JFrame {
             Message message = new Message(Message.Type.FILE);
 
             try {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Choose a file");
-                int result = fileChooser.showOpenDialog(this);
-                if (result == JFileChooser.APPROVE_OPTION) {
+                if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                     File file_to_send = fileChooser.getSelectedFile();
                     int filesize = (int) file_to_send.length();
                     message.file_byte = new byte[filesize];
@@ -548,17 +586,22 @@ public class Screen extends javax.swing.JFrame {
                     message.nickname = Screen.chosen_chatbox.getNickName();
                     message.chat_type = Screen.chosen_chatbox.chat_type;
                     Client.Send(message);
-                    Screen.chosen_chatbox.list_model.addElement("You have sent a file named "+file_to_send.getName());
+                    Screen.chosen_chatbox.list_model.addElement("You have sent a file named " + file_to_send.getName());
                     bis.close();
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 Logger.getLogger(Screen.class.getName()).log(Level.SEVERE, null, ex);
-            } 
+            }
         }
 
     }//GEN-LAST:event_send_file_buttonActionPerformed
+
+    private void pick_emoji_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pick_emoji_buttonActionPerformed
+          String text = text_field.getText()+emojis.getSelectedItem();
+          text_field.setText(text);
+    }//GEN-LAST:event_pick_emoji_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -621,8 +664,10 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.JButton create_screen_button;
     private javax.swing.JPanel create_screen_panel;
     private javax.swing.JLabel current_room_label;
+    private javax.swing.JComboBox<String> emojis;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -633,6 +678,7 @@ public class Screen extends javax.swing.JFrame {
     private javax.swing.JList<String> message_list;
     private javax.swing.JPanel message_screen_panel;
     private javax.swing.JTextField nickname_field;
+    private javax.swing.JButton pick_emoji_button;
     private javax.swing.JTextField room_create_text;
     private javax.swing.JLabel room_label;
     private javax.swing.JTable room_table;
