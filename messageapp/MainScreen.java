@@ -10,7 +10,7 @@ package messageapp;
  * @author medit
  */
 public class MainScreen extends javax.swing.JFrame {
-
+//Main entrance screen for the user. Initiates the user with given nickname.
     /**
      * Creates new form MainScreen
      */

@@ -12,6 +12,7 @@ import java.util.ArrayList;
  *
  * @author medit
  */
+// This class is used for representing rooms in client side
 public class CRoom implements Serializable{
     public int room_id;
     public String room_name;

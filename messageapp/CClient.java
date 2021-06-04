@@ -11,6 +11,7 @@ import java.io.Serializable;
  *
  * @author medit
  */
+// This class is used for representing client in client side
 public class CClient implements Serializable{
     public int client_id;
     public String client_nickname;

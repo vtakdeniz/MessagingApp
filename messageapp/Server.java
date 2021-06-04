@@ -71,6 +71,7 @@ public class Server {
         }
     }
 
+    //Broadcasts the given message to the room except for sending client. If client is not in the room broadcast is cancelled.
     public static void broadcastToRoom(CRoom cRoom, SClient sClient, Object message) {
         SRoom sRoom = intToRoomMap.get(cRoom.room_id);
         ArrayList<SClient> room_clients = sRoom.clients;
@@ -87,6 +88,7 @@ public class Server {
         }
     }
 
+    //Initiates base chat rooms.
     public static void initBaseRooms() {
         SRoom s1 = new SRoom();
         s1.room_id = room_id;
@@ -116,6 +118,7 @@ public class Server {
         Server.Rooms.add(s4);
     }
 
+    //Broadcast the notification to all clients along with sender client. 
     public static void broadcastToNotfRoom(SRoom sRoom, SClient sClient, Object message) {
 
         ArrayList<SClient> room_clients = sRoom.clients;
@@ -125,6 +128,7 @@ public class Server {
         }
     }
     
+    //Sends Inject request to all clients to inject each individual user that just joined the server.
     public static void injectUser(SClient sClient){
         CClient cClient = castClient(sClient);
         Message client_injection = new Message(Message.Type.INJECTION);
@@ -139,12 +143,14 @@ public class Server {
 
     }
     
+    //Sends the message to given single client.
     public static void SendToUser(SClient sender_client,Message message){
      SClient sClient = intToClientMap.get(((CClient)message.receiver).client_id);
      message.sender=castClient(sender_client);
      Server.Send(sClient, message);
     }
 
+    //Handles room joining request.
     public static void handleRequest(SClient sClient, Message message) {
         SRoom sRoom = intToRoomMap.get(((CRoom) message.content).room_id);
         sRoom.clients.add(sClient);
@@ -161,6 +167,7 @@ public class Server {
         broadcastToNotfRoom(sRoom, sClient, join_message);
     }
 
+    //Creates the room requested by the user and sends back a confirmation message.
     public static void CreateRoom(SClient sClient, Message message) {
         SRoom sRoom = initializeRoom(((String) message.content), sClient);
         Rooms.add(sRoom);
@@ -181,6 +188,7 @@ public class Server {
         Send(sClient, room_create_message);
     }
 
+    //Creates server side room
     public static SRoom initializeRoom(String room_name, SClient sClient) {
         SRoom sRoom = new SRoom();
         sRoom.room_id = room_id;
@@ -190,6 +198,7 @@ public class Server {
         return sRoom;
     }
 
+    //Sends message to given client.
     public static void Send(SClient cl, Object msg) {
 
         try {
@@ -200,6 +209,7 @@ public class Server {
 
     }
 
+    //Casts server side room lists to client side room list.
     static ArrayList<CRoom> castRooms(ArrayList<SRoom> sRooms) {
         ArrayList<CRoom> cRooms = new ArrayList<>();
 
@@ -209,6 +219,7 @@ public class Server {
         return cRooms;
     }
 
+    //Cast server side room to client side room.
     static CRoom castRoom(SRoom sRoom) {
         CRoom cRoom = new CRoom();
         //cRoom.room_creator=sRoom.room_creator;
@@ -217,6 +228,7 @@ public class Server {
         return cRoom;
     }
 
+    //Casts server side user lists to client side user list.
     static ArrayList<CClient> castClients(ArrayList<SClient> sClients) {
         ArrayList<CClient> cClients = new ArrayList<>();
 
@@ -226,6 +238,7 @@ public class Server {
         return cClients;
     }
 
+    //Cast server side user to client side user.
     static CClient castClient(SClient sClient) {
         CClient cClient = new CClient(sClient.id,sClient.nickname);
         return cClient;
@@ -256,16 +269,6 @@ public class Server {
         }
 
     }
-
-    /*public static void BroadCast(SClient sClient, Object msg) {
-
-        try {
-            sClient.socketOutput.writeObject(msg);
-        } catch (IOException ex) {
-            Logger.getLogger(SClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }*/
     public static void print(String msg) {
 
         System.out.println(msg);

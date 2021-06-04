@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+//This is a server side client representation
 public class SClient {
 
     int id;
@@ -32,6 +33,7 @@ public class SClient {
 
     }
 
+    //Handles the client message with the given message type
     class Listen extends Thread {
 
         SClient currentClient;

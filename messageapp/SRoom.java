@@ -12,6 +12,7 @@ import java.util.ArrayList;
  *
  * @author medit
  */
+//Serverside room representation
 public class SRoom implements Serializable{
     public int room_id;
     public String room_name;

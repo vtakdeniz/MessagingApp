@@ -1,6 +1,6 @@
 package messageapp;
 
-
+//This is the class to be sent in each message.
 public class Message implements java.io.Serializable {
 
     public static enum Type {TEXT, CONN_REQ, FILE,LIST_REQUEST,LIST,INJECTION,DELETION,NOTIFICATION,CREATE,ROOM_CREATE_NOTF,NICKNAME}
@@ -15,6 +15,7 @@ public class Message implements java.io.Serializable {
     public Object content;
     public Object receiver;
     public Object sender;
+    
     
     public byte[] file_byte;
     public int filesize;

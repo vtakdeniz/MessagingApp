@@ -11,6 +11,7 @@ import javax.swing.DefaultListModel;
  *
  * @author medit
  */
+//This class holds list model and associated room or client within for JList in screen class
 public class Chatbox {
 
     int chatbox_id;

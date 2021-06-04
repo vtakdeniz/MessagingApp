@@ -29,25 +29,23 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author medit
  */
+
 public class Screen extends javax.swing.JFrame {
 
     /**
      * Creates new form Screen
      */
+    
     public static DefaultTableModel client_table_model = new DefaultTableModel();
     public static DefaultTableModel room_table_model = new DefaultTableModel();
     public static int chat_box_id = 0;
+    //Maps are used for associating each chatbox with an id.
     public static Map<Integer, Chatbox> IntToRoomChatMap = new HashMap<Integer, Chatbox>();
     public static Map<Integer, Chatbox> IntToClientChatMap = new HashMap<Integer, Chatbox>();
+    //Chatboxes holds list model to be set on screen list.
     public static ArrayList<Chatbox> chatboxes = new ArrayList();
     public static Chatbox chosen_chatbox;
-    /**
-     * deprecated public static ArrayList<DefaultListModel> dlms = new
-     * ArrayList(); public static Map<Integer, DefaultListModel> intToRoomDlmMap
-     * = new HashMap<Integer, DefaultListModel>(); public static
-     * Map<Integer, DefaultListModel> intToClientDlmMap = new
-     * HashMap<Integer, DefaultListModel>();
-     */
+
     public Screen() {
         initComponents();
         
@@ -67,7 +65,9 @@ public class Screen extends javax.swing.JFrame {
 
     public void initEmojis(){
         emojis.removeAllItems();
-        String emot = "😀 😃 😄 😁 😆 😅 😂 😊 😇 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😛 😝 😜 😎 😏 😒 😞 😔 😟 😕 😣 😖 😫 😩 😢 😭 😠 😡 😳 😱 😨 😰 😥 😓 😶 😐 😑 😯 😦 😧 😮 😲 😴😪 😵 😷 😈 😺 😸 😹 😻 😼 😽 🙀 😿 😾";
+        String emot = "😀 😃 😄 😁 😆 😅 😂 😊 😇 🙃 😉 😌 😍 😘 😗 😙 😚 😋 😛 😝 "
+                + "😜 😎 😏 😒 😞 😔 😟 😕 😣 😖 😫 😩 😢 😭 😠 😡 😳 😱 😨 😰 😥 😓 "
+                + "😶 😐 😑 😯 😦 😧 😮 😲 😴😪 😵 😷 😈 😺 😸 😹 😻 😼 😽 🙀 😿 😾";
         String emojis[] = emot.split(" ");
         for (String emoji : emojis) {
             this.emojis.addItem(emoji);
@@ -442,7 +442,7 @@ public class Screen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void choose_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_choose_buttonActionPerformed
-
+// Sets chosen chatboxes list model to screen list model. Prompts a notification on text field if user is not a member.
         int row_room = room_table.getSelectedRow();
         int row_user = user_table.getSelectedRow();
 
@@ -479,6 +479,8 @@ public class Screen extends javax.swing.JFrame {
     }//GEN-LAST:event_back_buttonActionPerformed
 
     private void send_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_buttonActionPerformed
+           //If user is part of the group message will be sent normally. If not, first message will be user's nickname and will be sent as
+           // a part of joining request
         if (chosen_chatbox.chat_type == Message.Chat_Type.ROOM_MESSAGE && Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {
             Message message = new Message(Message.Type.TEXT);
             message.chat_type = Screen.chosen_chatbox.chat_type;
@@ -488,7 +490,9 @@ public class Screen extends javax.swing.JFrame {
             Client.Send(message);
             Screen.chosen_chatbox.list_model.addElement("You : " + text_field.getText());
             text_field.setText("");
-        } else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
+        }
+        //Messages will be directly if chatboxe's type is pvp message.
+        else if (chosen_chatbox.chat_type == Message.Chat_Type.PVP_MESSAGE) {
             Message message = new Message(Message.Type.TEXT);
             message.chat_type = Screen.chosen_chatbox.chat_type;
             message.content = text_field.getText();
@@ -508,15 +512,19 @@ public class Screen extends javax.swing.JFrame {
 
     }//GEN-LAST:event_send_buttonActionPerformed
 
-
+ 
     private void create_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_buttonActionPerformed
-
+        
         create_screen_panel.setVisible(true);
         start_panel.setEnabled(false);
 
     }//GEN-LAST:event_create_buttonActionPerformed
 
     private void create_screen_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_create_screen_buttonActionPerformed
+        //Sends a room creation request to the server. User will be automatically joined
+        // as the creator of the room and room will be injected to the table if creation
+        // is succesfull.
+        
         Message m = new Message(Message.Type.CREATE);
         m.content = room_create_text.getText();
         room_create_text.setText("");
@@ -541,6 +549,8 @@ public class Screen extends javax.swing.JFrame {
     }//GEN-LAST:event_user_tableMouseClicked
 
     private void send_file_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_send_file_buttonActionPerformed
+        // Prompts a file chooser to select a file and loads the file bytes into the message bytes property.
+        // Sends the message for bytes to be casted to a file in the client side.
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Choose a file");
         if (chosen_chatbox.chat_type == Message.Chat_Type.ROOM_MESSAGE && Client.joined_rooms.contains(chosen_chatbox.croom.room_id)) {

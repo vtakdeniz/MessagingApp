@@ -17,6 +17,7 @@ import javax.swing.JFileChooser;
 
 class Listen extends Thread {
 
+    // Message is handled according to it's type
     public void run() {
         while (Client.socket.isConnected()) {
             try {
@@ -45,6 +46,7 @@ class Listen extends Thread {
                         }
                         break;
                     case ROOM_CREATE_NOTF:
+                        // Room created notf is only received when user succesfully creates a room and is granted with ownership of the room
                         if (received.notf_type == Message.Notf_Type.SUCCES) {
                             Client.joined_rooms.add(((CRoom) received.content).room_id);
                             Chatbox c = Screen.getRoomChatbox((CRoom) received.content);
@@ -79,20 +81,7 @@ class Listen extends Thread {
 
     }
 
-    void addRoomToTable(CRoom cRoom) {
-        Chatbox chatbox = new Chatbox(cRoom);
-        chatbox.chat_box_nickname = "NONE";
-        Screen.IntToRoomChatMap.put(cRoom.room_id, chatbox);
-        Client.screen.room_table_model.addRow(new Object[]{chatbox});
-    }
-
-    void addClientToTable(CClient cClient) {
-        Chatbox chatbox = new Chatbox(cClient);
-        chatbox.chatbox_name = cClient.client_nickname;
-        Screen.IntToRoomChatMap.put(cClient.client_id, chatbox);
-        Client.screen.client_table_model.addRow(new Object[]{chatbox});
-    }
-
+//Adds user or rooms lists to tables that associated with the list
     void addListToTable(Message message) {
 
         if (message.cast_type == Message.Cast_Type.ROOM_LIST) {
@@ -169,6 +158,7 @@ public class Client {
 
     }
 
+    //Sends the message by writing it's to the socket's output 
     public static void Send(Object msg) {
         try {
             Client.socketOutput.writeObject(msg);
@@ -178,6 +168,7 @@ public class Client {
 
     }
 
+    //Sends nickname to server 
     public static void sendNickName() {
         Message nickname = new Message(Message.Type.NICKNAME);
         nickname.content = Client.nick_name;
